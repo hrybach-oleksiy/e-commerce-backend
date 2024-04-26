@@ -1,0 +1,21 @@
+{
+    "include": ["src/**/*", ".eslintrc.js", "webpack.config.js"],
+    "exclude": ["node_modules", "dist", "temp"],
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "noImplicitAny": true,
+        // "module": "es6",
+        "module": "commonjs",
+        "target": "ES2021",
+        "jsx": "react",
+        "allowJs": true,
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "strict": true,
+        "typeRoots": ["node_modules/@types", "src/@types/custom.d.ts"],
+        "plugins": [{ "name": "typescript-plugin-css-modules" }],
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+    }
+}
