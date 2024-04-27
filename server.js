@@ -19,6 +19,7 @@ const start = async () => {
     if (!DB_URL) {
       throw new Error('DB_URL is not defined in the environment');
     }
+
     await mongoose.connect(DB_URL);
     app.listen(PORT, () => {
       console.log(`Server starts on port ${PORT}`);
