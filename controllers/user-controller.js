@@ -5,7 +5,7 @@
 const userService = require('../services/user-service');
 
 class UserController {
-  async registration(req, res) {
+  async items(req, res) {
     try {
       const COOKIE_AGE = 30 * 24 * 60 * 60 * 1000;
       const { email, password } = req.body;
