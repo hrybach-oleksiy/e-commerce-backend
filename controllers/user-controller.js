@@ -5,7 +5,7 @@
 const userService = require('../services/user-service');
 
 class UserController {
-  async items(req, res) {
+  async registration(req, res) {
     try {
       const COOKIE_AGE = 30 * 24 * 60 * 60 * 1000;
       const { email, password } = req.body;
@@ -13,6 +13,17 @@ class UserController {
 
       res.cookie('refreshToken', userData.refreshToken, { maxAge: COOKIE_AGE, httpOnly: true });
       return res.json(userData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async activation(req, res) {
+    try {
+      const activationLink = req.params.link;
+
+      await userService.activation(activationLink);
+      return res.redirect(process.env.CLIENT_URL);
     } catch (error) {
       console.log(error);
     }

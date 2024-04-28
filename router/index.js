@@ -1,12 +1,14 @@
 const { Router } = require('express');
 
 const router = new Router();
-const UserController = require('../controllers/user-controller');
+const userController = require('../controllers/user-controller');
 
-// User Authentication
-router.post('/registration', UserController.registration); // User registration
+// User
+router.post('/registration', userController.registration); // User registration
+router.get('/activation/:link', userController.activation); // User activation
 router.post('/login'); // User login
 router.post('/logout'); // User logout
+router.get('/refresh'); // Token Refresh
 
 // Items
 router.get('/items'); // Get all items

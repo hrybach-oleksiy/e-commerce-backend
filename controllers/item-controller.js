@@ -4,10 +4,10 @@
 // const itemService = require('../services/item-service');
 
 class ItemController {
-  // ** ===================  GET ALL PRODUCTS  ===================
+  // ** ===================  GET ALL ITEMS  ===================
   async getAllItems(req, res) {}
 
-  // ** ===================  GET SINGLE PRODUCT  ===================
+  // ** ===================  GET SINGLE ITEM  ===================
   async getSingleItem(req, res) {}
 }
 module.exports = new ItemController();
