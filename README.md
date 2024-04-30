@@ -101,3 +101,87 @@ where:
 
 As a response server redirect the user to the client page and set `isActivated` field as `true`
 </details>
+
+### User Login
+
+Initiator: Client application
+
+Description: Used to create a new user. 
+
+<details>
+<summary markdown="span">Request to the server</summary>
+
+```javascript
+{
+  email: string,
+  password: string,
+}
+```
+
+where:
+
+- `email` - user's email
+- `password` - user's password
+</details>
+
+<details>
+<summary markdown="span">Server Response</summary>
+
+```javascript
+{
+  accessToken: string,
+  refreshToken: string,
+  user: {
+    email: string,
+    id: string,
+    isActivated: boolean,
+  },
+}
+```
+
+where:
+
+- `accessToken` - access token received from the server
+- `refreshToken` - refresh token received from the server
+- `email` - user's email 
+- `id` - identifier received from the sever
+- `isActivated` - current activation status of the user
+</details>
+
+### User Logout
+
+Initiator: Client application
+
+Description: Used to create a new user. 
+
+<details>
+<summary markdown="span">Request to the server</summary>
+
+```javascript
+{
+  email: string,
+  password: string,
+}
+```
+
+where:
+
+- `email` - user's email
+- `password` - user's password
+</details>
+
+<details>
+<summary markdown="span">Server Response</summary>
+
+```javascript
+{
+  acknowledged: boolean,
+  deletedCount: number
+}
+```
+
+where:
+
+- `acknowledged` - a boolean value indicating whether the operation was successfully acknowledged by the server.
+- `deletedCount` - the number of documents deleted from the database as a result of the operation.
+</details>
