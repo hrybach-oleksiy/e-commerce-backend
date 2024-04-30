@@ -106,7 +106,7 @@ As a response server redirect the user to the client page and set `isActivated` 
 
 Initiator: Client application
 
-Description: Used to create a new user. 
+Description: Used to login user. 
 
 <details>
 <summary markdown="span">Request to the server</summary>
@@ -152,7 +152,7 @@ where:
 
 Initiator: Client application
 
-Description: Used to create a new user. 
+Description: Used to logout user. 
 
 <details>
 <summary markdown="span">Request to the server</summary>
