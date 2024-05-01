@@ -43,6 +43,15 @@ Description: Used to create a new user.
 {
   email: string,
   password: string,
+  firstName: string,
+  lastName: string, 
+  dateOfBirth: Date,
+  address: {
+    street: string,
+    city: string,
+    postalCode: string,
+    country: string,
+  }
 }
 ```
 
@@ -50,6 +59,14 @@ where:
 
 - `email` - user's email
 - `password` - user's password
+- `firstName` - user's first name
+- `lastName` - user's last name
+- `dateOfBirth` - user's DOB 
+- `address` - user's address
+- `street` - user's address street
+- `city` - user's address city
+- `postalCode` - user's address postal code
+- `country` - user's address country
 </details>
 
 <details>

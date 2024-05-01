@@ -27,18 +27,10 @@ const userSchema = new Schema({
     type: Date,
     required: true,
   },
-  shippingAddress: [
-    {
-      type: addressSchema,
-      required: true,
-    },
-  ],
-  billingAddress: [
-    {
-      type: addressSchema,
-      required: true,
-    },
-  ],
+  address: {
+    type: addressSchema,
+    required: true,
+  },
   isActivated: { type: Boolean, default: false },
   activationLink: { type: String },
 });

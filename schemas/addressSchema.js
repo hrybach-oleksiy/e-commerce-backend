@@ -21,7 +21,7 @@ const addressSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  isDefault: { type: Boolean, default: false },
+  // isDefault: { type: Boolean, default: false },
 });
 
 module.exports = addressSchema;
