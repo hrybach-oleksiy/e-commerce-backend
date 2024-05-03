@@ -27,10 +27,31 @@ const userSchema = new Schema({
     type: Date,
     required: true,
   },
-  address: {
-    type: addressSchema,
+  // address: {
+  //   type: addressSchema,
+  //   required: true,
+  // },
+  street: {
+    type: String,
     required: true,
+    trim: true,
   },
+  city: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  postalCode: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  country: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+
   isActivated: { type: Boolean, default: false },
   activationLink: { type: String },
 });
