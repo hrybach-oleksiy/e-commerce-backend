@@ -110,7 +110,7 @@ where:
 * `accessToken` - access token received from the server
 * `refreshToken` - refresh token received from the server
 * `email` - user's email
-* `id` - identifier received from the sever
+* `id` - identifier received from the server
 * `isActivated` - current activation status of the user
 
 - **Error Response:**
@@ -238,7 +238,7 @@ where:
 * `accessToken` - access token received from the server
 * `refreshToken` - refresh token received from the server
 * `email` - user's email
-* `id` - identifier received from the sever
+* `id` - identifier received from the server
 * `isActivated` - current activation status of the user
 
 - **Error Response:**
@@ -391,7 +391,7 @@ Description: Used to get list of countries.
   where:
 
 * `name` - country name
-* `id` - identifier received from the sever
+* `id` - identifier received from the server
 
 - **Error Response:**
 
