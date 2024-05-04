@@ -6,7 +6,7 @@ const UserDto = require('../dtos/user-dto');
 const mailService = require('./mail-service');
 
 class UserService {
-  async registration(email, password, firstName, lastName, dateOfBirth, address) {
+  async registration(email, password, firstName, lastName, dateOfBirth, street, city, postalCode, country) {
     try {
       const candidate = await UserModel.findOne({ email });
 
@@ -23,7 +23,10 @@ class UserService {
         firstName,
         lastName,
         dateOfBirth,
-        address,
+        street,
+        city,
+        postalCode,
+        country,
       });
       await mailService.sendActivationMail(email, `${process.env.API_URL}/api/activation/${activationLink}`);
 
