@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose');
-const addressSchema = require('../schemas/addressSchema');
 
 const userSchema = new Schema({
   email: {
@@ -27,10 +26,6 @@ const userSchema = new Schema({
     type: Date,
     required: true,
   },
-  // address: {
-  //   type: addressSchema,
-  //   required: true,
-  // },
   street: {
     type: String,
     required: true,
