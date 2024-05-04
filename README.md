@@ -35,6 +35,7 @@ where:
 Description: Used to create a new user.
 
 <details>
+<summary markdown="span">Request to the server</summary>
 
 - **URL**
 
@@ -83,18 +84,22 @@ where:
 - `city` - user's address city
 - `postalCode` - user's address postal code
 - `country` - user's address country
+</details>
 
-* **Success Response:**
+<details>
+<summary markdown="span">Server Response</summary>
+
+- **Success Response:**
 
   - **Code:** 201 CREATED <br />
     **Content:**
     ```json
     {
-      "accessToken": "New Red Car",
-      "refreshToken": "#ff0000",
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndvdF9rb25vdG9wQHVrci5uZXQiLCJpZCI6IjY2MzYzMzYxYWQ3MzA1MzZhMTg1NWI1MSIsImlzQWN0aXZhdGVkIjpmYWxzZSwiaWF0IjoxNzE0ODI4MTMyLCJleHAiOjE3MTQ4MjgxNDd9.mUtKjXXvm5A3xMCu6sPs5DyWbJXm520UxFIux3uzWE8",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndvdF9rb25vdG9wQHVrci5uZXQiLCJpZCI6IjY2MzYzMzYxYWQ3MzA1MzZhMTg1NWI1MSIsImlzQWN0aXZhdGVkIjpmYWxzZSwiaWF0IjoxNzE0ODI4MTMyLCJleHAiOjE3MTc0MjAxMzJ9.9CUrUXyFo6jkEfsXW9nnwJ7vrqNs0CQE79QrZlNr_sk",
       "user": {
         "email": "test@email.com",
-        "id": "dsds",
+        "id": "66363361ad730536a1855b51",
         "isActivated": false
       }
     }
@@ -102,17 +107,25 @@ where:
 
   where:
 
-- `accessToken` - access token received from the server
-- `refreshToken` - refresh token received from the server
-- `email` - user's email
-- `id` - identifier received from the sever
-- `isActivated` - current activation status of the user
+* `accessToken` - access token received from the server
+* `refreshToken` - refresh token received from the server
+* `email` - user's email
+* `id` - identifier received from the sever
+* `isActivated` - current activation status of the user
 
-* **Error Response:**
+- **Error Response:**
 
-  None
+- **Code:** 400 BAD REQUEST <br />
+  **Content:**
 
-* **Notes:**
+```json
+{
+  "message": "User with test@email.com is already exist",
+  "errors": []
+}
+```
+
+- **Notes:**
 
   None
 
@@ -120,22 +133,35 @@ where:
 
 ### User Activation
 
-Initiator: Client application
-
 Description: Used to activate a new user.
 
 <details>
 <summary markdown="span">Request to the server</summary>
 
-```javascript
-{
-  activationLink: string,
-}
-```
+- **URL**
 
-where:
+  /user/activation:link
 
-- `activationLink` - URL link containing the activation token received by the user via email
+- **Method:**
+
+  `GET`
+
+- **Headers:**
+
+  None
+
+- **URL Params**
+
+  `link=[string]`
+
+- **Query Params**
+
+  None
+
+- **Data Params**
+
+  None
+
 </details>
 
 <details>
@@ -147,14 +173,34 @@ As a response server redirect the user to the client page and set `isActivated` 
 
 ### User Login
 
-Initiator: Client application
-
 Description: Used to login user.
 
 <details>
 <summary markdown="span">Request to the server</summary>
 
-```javascript
+- **URL**
+
+  /user/login
+
+- **Method:**
+
+  `POST`
+
+- **Headers:**
+
+  `'Content-Type': 'application/json'`
+
+- **URL Params**
+
+  None
+
+- **Query Params**
+
+  None
+
+- **Data Params**
+
+```typescript
 {
   email: string,
   password: string,
@@ -165,42 +211,93 @@ where:
 
 - `email` - user's email
 - `password` - user's password
+
 </details>
 
 <details>
 <summary markdown="span">Server Response</summary>
 
-```javascript
+- **Success Response:**
+
+  - **Code:** 200 <br />
+    **Content:**
+    ```json
+    {
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndvdF9rb25vdG9wQHVrci5uZXQiLCJpZCI6IjY2MzYzMzYxYWQ3MzA1MzZhMTg1NWI1MSIsImlzQWN0aXZhdGVkIjpmYWxzZSwiaWF0IjoxNzE0ODI4MTMyLCJleHAiOjE3MTQ4MjgxNDd9.mUtKjXXvm5A3xMCu6sPs5DyWbJXm520UxFIux3uzWE8",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndvdF9rb25vdG9wQHVrci5uZXQiLCJpZCI6IjY2MzYzMzYxYWQ3MzA1MzZhMTg1NWI1MSIsImlzQWN0aXZhdGVkIjpmYWxzZSwiaWF0IjoxNzE0ODI4MTMyLCJleHAiOjE3MTc0MjAxMzJ9.9CUrUXyFo6jkEfsXW9nnwJ7vrqNs0CQE79QrZlNr_sk",
+      "user": {
+        "email": "test@email.com",
+        "id": "66363361ad730536a1855b51",
+        "isActivated": true
+      }
+    }
+    ```
+
+  where:
+
+* `accessToken` - access token received from the server
+* `refreshToken` - refresh token received from the server
+* `email` - user's email
+* `id` - identifier received from the sever
+* `isActivated` - current activation status of the user
+
+- **Error Response:**
+
+- **Code:** 400 BAD REQUEST <br />
+  **Content:**
+
+```json
 {
-  accessToken: string,
-  refreshToken: string,
-  user: {
-    email: string,
-    id: string,
-    isActivated: boolean,
-  },
+  "message": "The user with such email was not found",
+  "errors": []
 }
 ```
 
-where:
+OR
 
-- `accessToken` - access token received from the server
-- `refreshToken` - refresh token received from the server
-- `email` - user's email
-- `id` - identifier received from the sever
-- `isActivated` - current activation status of the user
+```json
+{
+  "message": "Invalid Password",
+  "errors": []
+}
+```
+
+- **Notes:**
+
+  None
+
 </details>
 
 ### User Logout
-
-Initiator: Client application
 
 Description: Used to logout user.
 
 <details>
 <summary markdown="span">Request to the server</summary>
 
-```javascript
+- **URL**
+
+  /user/logout
+
+- **Method:**
+
+  `POST`
+
+- **Headers:**
+
+  `'Content-Type': 'application/json'`
+
+- **URL Params**
+
+  None
+
+- **Query Params**
+
+  None
+
+- **Data Params**
+
+```typescript
 {
   email: string,
   password: string,
@@ -216,10 +313,15 @@ where:
 <details>
 <summary markdown="span">Server Response</summary>
 
-```javascript
+- **Success Response:**
+
+  - **Code:** 200 <br />
+    **Content:**
+
+```json
 {
-  acknowledged: boolean,
-  deletedCount: number
+  "acknowledged": true,
+  "deletedCount": 1
 }
 ```
 
@@ -227,4 +329,11 @@ where:
 
 - `acknowledged` - a boolean value indicating whether the operation was successfully acknowledged by the server.
 - `deletedCount` - the number of documents deleted from the database as a result of the operation.
+
+- **Error Response:**
+
+- **Notes:**
+
+  None
+
 </details>

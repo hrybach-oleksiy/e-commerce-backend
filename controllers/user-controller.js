@@ -1,32 +1,31 @@
+const { response } = require('express');
 const userService = require('../services/user-service');
 
 class UserController {
-  async registration(req, res) {
+  async registration(req, res, next) {
     try {
       const COOKIE_AGE = 30 * 24 * 60 * 60 * 1000;
       const { body } = req;
-      //   const { email, password, firstName, lastName, dateOfBirth, street, city, postalCode, country } = req.body;
       const userData = await userService.registration(body);
-
       res.cookie('refreshToken', userData.refreshToken, { maxAge: COOKIE_AGE, httpOnly: true });
       return res.json(userData);
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   }
 
-  async activation(req, res) {
+  async activation(req, res, next) {
     try {
       const activationLink = req.params.link;
 
       await userService.activation(activationLink);
       return res.redirect(process.env.CLIENT_URL);
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   }
 
-  async login(req, res) {
+  async login(req, res, next) {
     const COOKIE_AGE = 30 * 24 * 60 * 60 * 1000;
     try {
       const { email, password } = req.body;
@@ -35,11 +34,11 @@ class UserController {
       res.cookie('refreshToken', userData.refreshToken, { maxAge: COOKIE_AGE, httpOnly: true });
       return res.json(userData);
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   }
 
-  async logout(req, res) {
+  async logout(req, res, next) {
     try {
       const { refreshToken } = req.cookies;
       const token = await userService.logout(refreshToken);
@@ -47,11 +46,11 @@ class UserController {
       res.clearCookie('refreshToken');
       return res.json(token);
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   }
 
-  async refresh(req, res) {
+  async refresh(req, res, next) {
     const COOKIE_AGE = 30 * 24 * 60 * 60 * 1000;
     try {
       const { refreshToken } = req.cookies;
@@ -60,7 +59,7 @@ class UserController {
       res.cookie('refreshToken', userData.refreshToken, { maxAge: COOKIE_AGE, httpOnly: true });
       return res.json(userData);
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   }
 }
