@@ -13,7 +13,7 @@
   - SMTP_USER
   - SMTP_PASSWORD
 - Start server: `$ npm start`.
-- Now you can send requests to the address: `http://localhost:5000/`.
+- Now you can send requests to the address: `http://localhost:5000/api`.
 
 In the `.env.example` file, you can find an example the `.env` file.
 
@@ -329,6 +329,69 @@ where:
 
 - `acknowledged` - a boolean value indicating whether the operation was successfully acknowledged by the server.
 - `deletedCount` - the number of documents deleted from the database as a result of the operation.
+
+- **Error Response:**
+
+- **Notes:**
+
+  None
+
+</details>
+
+### Get Countries
+
+Description: Used to get list of countries.
+
+<details>
+<summary markdown="span">Request to the server</summary>
+
+- **URL**
+
+  /country
+
+- **Method:**
+
+  `GET`
+
+- **Headers:**
+
+  None
+
+- **URL Params**
+
+  None
+
+- **Query Params**
+
+  None
+
+- **Data Params**
+
+  None
+
+</details>
+
+<details>
+<summary markdown="span">Server Response</summary>
+
+- **Success Response:**
+
+  - **Code:** 200 <br />
+    **Content:**
+
+  ```json
+  [
+    {
+      "name": "Gabon",
+      "id": "663679d84177dfc31acbe6b1"
+    }
+  ]
+  ```
+
+  where:
+
+* `name` - country name
+* `id` - identifier received from the sever
 
 - **Error Response:**
 
