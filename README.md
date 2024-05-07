@@ -347,7 +347,7 @@ Description: Used to get list of countries.
 
 - **URL**
 
-  /country
+  /countries
 
 - **Method:**
 
@@ -382,16 +382,22 @@ Description: Used to get list of countries.
   ```json
   [
     {
-      "name": "Gabon",
-      "_id": "663679d84177dfc31acbe6b1"
+    "abbrev": "FI",
+    "name": "Finland",
+    "_id": "663a132951c79c45833675fa",
+    "postalCodePattern": "99999",
+    "postalRegex": "^[0-9]{5}$",
     }
   ]
   ```
 
   where:
 
+* `abbrev` - country code
 * `name` - country name
-* `id` - identifier received from the server
+* `_id` - identifier received from the server
+* `postalCodePattern` - the postal code example you can use as a placeholder to show user correct pattern
+* `postalRegex` - the regex you can use to validate the user input
 
 - **Error Response:**
 
