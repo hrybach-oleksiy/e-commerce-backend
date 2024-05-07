@@ -91,7 +91,7 @@ where:
 
 - **Success Response:**
 
-  - **Code:** 201 CREATED <br />
+  - **Code:** 200 <br />
     **Content:**
     ```json
     {
@@ -383,7 +383,7 @@ Description: Used to get list of countries.
   [
     {
       "name": "Gabon",
-      "id": "663679d84177dfc31acbe6b1"
+      "_id": "663679d84177dfc31acbe6b1"
     }
   ]
   ```
