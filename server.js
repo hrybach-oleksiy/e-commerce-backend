@@ -5,14 +5,42 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const router = require('./router/index');
 const errorMiddleware = require('./middlewares/error-middleware');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 const { DB_URL } = process.env;
 const app = express();
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Cycle Store API',
+      version: '1.0.0',
+      description: 'API for the pet project',
+    },
+    servers: [
+      {
+        url: 'http://localhost:5000',
+      },
+    ],
+    tags: [
+      {
+        name: 'Countries',
+        description: 'List of countries',
+      },
+    ],
+  },
+  apis: ['./router/*.js', './models/country-model.js'],
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api', router);
 app.use(errorMiddleware);
 

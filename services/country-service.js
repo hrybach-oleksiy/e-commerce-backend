@@ -2,8 +2,8 @@ const CountryModel = require('../models/country-model');
 
 class CountryService {
   async getAllCountries() {
-    const users = await CountryModel.find();
-    return users;
+    const countries = await CountryModel.find();
+    return countries;
   }
 }
 
