@@ -101,8 +101,12 @@ const userRouter = express.Router();
  *             properties:
  *               email:
  *                 type: string
+ *                 description: The email address of the user
+ *                 example: test@test.com
  *               password:
  *                 type: string
+ *                 description: The password of the user.
+ *                 example: Smith@123
  *     responses:
  *       200:
  *         description: User logged in successfully.
