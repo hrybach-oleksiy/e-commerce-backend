@@ -12,26 +12,31 @@ const PORT = process.env.PORT || 3000;
 const { DB_URL } = process.env;
 const app = express();
 
-const swaggerOptions = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'Cycle Store API',
-      version: '1.0.0',
-      description: 'API for the pet project',
+const swaggerDefinition = {
+  openapi: '3.0.0',
+  info: {
+    title: 'Express API for e-commerce pet project',
+    version: '1.0.0',
+    description: 'This is a REST API application made with Express. It retrieves data from the app server',
+    license: {
+      name: 'Licensed Under MIT',
+      url: 'https://spdx.org/licenses/MIT.html',
     },
-    servers: [
-      {
-        url: 'http://localhost:3000',
-      },
-    ],
-    tags: [
-      {
-        name: 'Countries',
-        description: 'List of countries',
-      },
-    ],
   },
+  servers: [
+    {
+      url: 'http://localhost:3000/api',
+      description: 'Development server',
+    },
+    {
+      url: 'https://codefrondlers.store/jsfe23q4/api',
+      description: 'Production server',
+    },
+  ],
+};
+
+const swaggerOptions = {
+  swaggerDefinition,
   apis: ['./router/*.js', './models/country-model.js'],
 };
 
@@ -39,8 +44,21 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+  cors({
+    origin: [
+      'https://playoffthecuff.github.io',
+      'http://127.0.0.1:5173',
+      'http://127.0.0.1:4173',
+      'http://localhost:3000',
+      'http://localhost:5173',
+    ],
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    optionsSuccessStatus: 204,
+  }),
+);
 app.use('/api', router);
 app.use(errorMiddleware);
 

@@ -8,7 +8,7 @@ class UserController {
       const { body } = req;
       const userData = await userService.registration(body);
       res.cookie('refreshToken', userData.refreshToken, { maxAge: COOKIE_AGE, httpOnly: true });
-      return res.json(userData);
+      res.status(201).json(userData);
     } catch (error) {
       next(error);
     }
@@ -32,7 +32,7 @@ class UserController {
       const userData = await userService.login(email, password);
 
       res.cookie('refreshToken', userData.refreshToken, { maxAge: COOKIE_AGE, httpOnly: true });
-      return res.json(userData);
+      res.json(userData);
     } catch (error) {
       next(error);
     }

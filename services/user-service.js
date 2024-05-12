@@ -29,6 +29,7 @@ class UserService {
       postalCode,
       country,
     });
+
     await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activation/${activationLink}`);
 
     const userDto = new UserDto(user);
