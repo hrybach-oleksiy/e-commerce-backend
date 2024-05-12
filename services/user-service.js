@@ -29,7 +29,8 @@ class UserService {
       postalCode,
       country,
     });
-    await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activation/${activationLink}`);
+
+    await mailService.sendActivationMail(email, `${process.env.API_URL}/api/users/activation/${activationLink}`);
 
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });

@@ -13,7 +13,7 @@
   - SMTP_USER
   - SMTP_PASSWORD
 - Start server: `$ npm start`.
-- Now you can send requests to the address: `http://localhost:5000/api`.
+- Now you can send requests to the address: `http://localhost:3000/api`.
 
 In the `.env.example` file, you can find an example the `.env` file.
 
@@ -30,7 +30,11 @@ where:
 - `API_URL` - address of the server
 - `CLIENT_URL` - address of the client
 
-### User Registration
+### Documentation
+
+You can the description of the CRUD operation by the [link](http://localhost:3000/api-docs/)
+
+<!-- ### User Registration
 
 Description: Used to create a new user.
 
@@ -405,4 +409,4 @@ Description: Used to get list of countries.
 
   None
 
-</details>
+</details> -->

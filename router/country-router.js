@@ -5,13 +5,22 @@ const countryRouter = express.Router();
 
 /**
  * @swagger
+ * tags:
+ *  name: Countries
+ *  description: A countries API
+ *
+ */
+
+/**
+ * @swagger
  * /countries:
  *   get:
  *     summary: Get the list of all countries.
+ *     tags: [Countries]
  *     description: Get the list of all countries.
  *     responses:
  *       200:
- *         description: Successful retrieval of the list of countries.
+ *         description: Successful retrieval of the list of the countries.
  *         content:
  *           application/json:
  *             schema:
