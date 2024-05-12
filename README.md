@@ -30,7 +30,7 @@ where:
 - `API_URL` - address of the server
 - `CLIENT_URL` - address of the client
 
-### User Registration
+<!-- ### User Registration
 
 Description: Used to create a new user.
 
@@ -405,4 +405,4 @@ Description: Used to get list of countries.
 
   None
 
-</details>
+</details> -->
