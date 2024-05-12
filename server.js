@@ -37,7 +37,7 @@ const swaggerDefinition = {
 
 const swaggerOptions = {
   swaggerDefinition,
-  apis: ['./router/*.js', './models/country-model.js'],
+  apis: ['./router/*.js', './models/*.js'],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);

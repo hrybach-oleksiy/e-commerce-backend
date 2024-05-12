@@ -19,7 +19,7 @@ class UserController {
       const activationLink = req.params.link;
 
       await userService.activation(activationLink);
-      return res.redirect(process.env.CLIENT_URL);
+      res.redirect(process.env.CLIENT_URL);
     } catch (error) {
       next(error);
     }
@@ -44,7 +44,7 @@ class UserController {
       const token = await userService.logout(refreshToken);
 
       res.clearCookie('refreshToken');
-      return res.json(token);
+      res.json(token);
     } catch (error) {
       next(error);
     }
@@ -57,7 +57,7 @@ class UserController {
       const userData = await userService.refresh(refreshToken);
 
       res.cookie('refreshToken', userData.refreshToken, { maxAge: COOKIE_AGE, httpOnly: true });
-      return res.json(userData);
+      res.json(userData);
     } catch (error) {
       next(error);
     }
