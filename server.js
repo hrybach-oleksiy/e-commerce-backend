@@ -37,7 +37,7 @@ const swaggerDefinition = {
 
 const swaggerOptions = {
   swaggerDefinition,
-  apis: ['./router/*.js', './models/*.js'],
+  apis: ['./router/*.js', './models/*.js', './schemas/*.js'],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
@@ -47,13 +47,7 @@ app.use(cookieParser());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(
   cors({
-    origin: [
-      'https://playoffthecuff.github.io',
-      'http://127.0.0.1:5173',
-      'http://127.0.0.1:4173',
-      'http://localhost:3000',
-      'http://localhost:5173',
-    ],
+    origin: ['https://hrybach-oleksiy.github.io/', 'http://localhost:5173'],
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204,

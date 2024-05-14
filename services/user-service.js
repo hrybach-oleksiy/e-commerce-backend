@@ -8,7 +8,7 @@ const ApiError = require('../exceptions/api-error');
 
 class UserService {
   async registration(body) {
-    const { email, password, firstName, lastName, dateOfBirth, street, city, postalCode, country } = body;
+    const { email, password, firstName, lastName, dateOfBirth, addresses } = body;
     const candidate = await UserModel.findOne({ email });
 
     if (candidate) {
@@ -24,10 +24,10 @@ class UserService {
       firstName,
       lastName,
       dateOfBirth,
-      street,
-      city,
-      postalCode,
-      country,
+      addresses: {
+        shippingAddresses: addresses.shippingAddress,
+        billingAddresses: addresses.billingAddress,
+      },
     });
 
     await mailService.sendActivationMail(email, `${process.env.API_URL}/api/users/activation/${activationLink}`);
