@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const addressSchema = require('../schemas/address-schema');
 
 /**
  * @swagger
@@ -30,31 +31,25 @@ const { Schema, model } = require('mongoose');
  *           format: date
  *           description: The date of birth of the user.
  *           example: 1986-08-29
- *         street:
- *           type: string
- *           description: The street address of the user.
- *           example: Baker Street
- *         city:
- *           type: string
- *           description: The city of the user.
- *           example: London
- *         postalCode:
- *           type: string
- *           description: The postal code of the user.
- *           example: E17DR
- *         country:
- *           type: string
- *           description: The country of the user.
- *           example: Great Britain
+ *         addresses:
+ *           type: object
+ *           properties:
+ *             shippingAddresses:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Address'
+ *             billingAddresses:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Address'
+ *           required:
+ *             - shippingAddresses
  *       required:
  *         - email
  *         - password
  *         - firstName
  *         - dateOfBirth
- *         - street
- *         - city
- *         - postalCode
- *         - country
+ *         - shippingAddresses
  */
 
 const userSchema = new Schema({
@@ -83,25 +78,9 @@ const userSchema = new Schema({
     type: Date,
     required: true,
   },
-  street: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  city: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  postalCode: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  country: {
-    type: String,
-    required: true,
-    trim: true,
+  addresses: {
+    shippingAddresses: { type: [addressSchema], required: true },
+    billingAddresses: { type: [addressSchema], required: false },
   },
 
   isActivated: { type: Boolean, default: false },
