@@ -25,8 +25,8 @@ class UserService {
       lastName,
       dateOfBirth,
       addresses: {
-        shippingAddresses: addresses.shippingAddress,
-        billingAddresses: addresses.billingAddress,
+        shippingAddresses: addresses.shippingAddresses,
+        billingAddresses: addresses.billingAddresses,
       },
     });
 

@@ -79,10 +79,9 @@ const userSchema = new Schema({
     required: true,
   },
   addresses: {
-    shippingAddresses: { type: [addressSchema], required: true },
-    billingAddresses: { type: [addressSchema], required: false },
+    shippingAddresses: [{ type: addressSchema, required: true }],
+    billingAddresses: [{ type: addressSchema, required: false }],
   },
-
   isActivated: { type: Boolean, default: false },
   activationLink: { type: String },
 });
