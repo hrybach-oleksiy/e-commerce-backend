@@ -16,7 +16,7 @@ const swaggerDefinition = {
   openapi: '3.0.0',
   info: {
     title: 'Express API for e-commerce pet project',
-    version: '1.0.0',
+    version: '1.0.1',
     description: 'This is a REST API application made with Express. It retrieves data from the app server',
     license: {
       name: 'Licensed Under MIT',
