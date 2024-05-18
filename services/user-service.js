@@ -40,6 +40,11 @@ class UserService {
     return { ...tokens, user: userDto };
   }
 
+  async checkEmailExists(email) {
+    const user = await UserModel.findOne({ email });
+    return Boolean(user);
+  }
+
   async activation(activationLink) {
     const user = await UserModel.findOne({ activationLink });
 

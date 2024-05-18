@@ -14,6 +14,17 @@ class UserController {
     }
   }
 
+  async checkEmail(req, res, next) {
+    const email = req.body.email;
+    try {
+      const exists = await userService.checkEmailExists(email);
+      res.status(200).json({ email, exists });
+    } catch (error) {
+      console.error('Failed to check email availability:', error);
+      next(error);
+    }
+  }
+
   async activation(req, res, next) {
     try {
       const activationLink = req.params.link;

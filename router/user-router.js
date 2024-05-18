@@ -197,10 +197,25 @@ const userRouter = express.Router();
  *         description: Access token refreshed successfully.
  */
 
+/**
+ * @swagger
+ * /users/check-email:
+ *   post:
+ *     summary: Check if email already exists in the system.
+ *     tags: [Users]
+ *     description: Check if email already exists in the system.
+ *     responses:
+ *       200:
+ *         description: Information about the existence of email in the system.
+ *       5XX:
+ *         description: Unexpected error
+ */
+
 userRouter.route('/registration').post(userController.registration);
 userRouter.route('/activation/:link').get(userController.activation);
 userRouter.route('/login').post(userController.login);
 userRouter.route('/logout').post(userController.logout);
 userRouter.route('/refresh').get(userController.refresh);
+userRouter.route('/check-email').post(userController.checkEmail);
 
 module.exports = userRouter;
