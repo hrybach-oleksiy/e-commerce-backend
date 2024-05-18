@@ -202,5 +202,6 @@ userRouter.route('/activation/:link').get(userController.activation);
 userRouter.route('/login').post(userController.login);
 userRouter.route('/logout').post(userController.logout);
 userRouter.route('/refresh').get(userController.refresh);
+userRouter.route('/check-email').post(userController.checkEmail);
 
 module.exports = userRouter;
