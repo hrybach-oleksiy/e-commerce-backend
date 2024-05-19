@@ -7,25 +7,9 @@ class UserController {
       const COOKIE_AGE = 30 * 24 * 60 * 60 * 1000;
       const { body } = req;
       const userData = await userService.registration(body);
-      res.cookie('refreshToken', userData.refreshToken, {
-        maxAge: COOKIE_AGE,
-        httpOnly: true,
-        secure: true,
-        sameSite: 'None',
-      });
+      res.cookie('refreshToken', userData.refreshToken, { maxAge: COOKIE_AGE, httpOnly: true });
       res.status(201).json(userData);
     } catch (error) {
-      next(error);
-    }
-  }
-
-  async checkEmail(req, res, next) {
-    const email = req.body.email;
-    try {
-      const exists = await userService.checkEmailExists(email);
-      res.status(200).json({ email, exists });
-    } catch (error) {
-      console.error('Failed to check email availability:', error);
       next(error);
     }
   }
@@ -47,12 +31,7 @@ class UserController {
       const { email, password } = req.body;
       const userData = await userService.login(email, password);
 
-      res.cookie('refreshToken', userData.refreshToken, {
-        maxAge: COOKIE_AGE,
-        httpOnly: true,
-        secure: true,
-        sameSite: 'None',
-      });
+      res.cookie('refreshToken', userData.refreshToken, { maxAge: COOKIE_AGE, httpOnly: true });
       res.json(userData);
     } catch (error) {
       next(error);
@@ -77,12 +56,7 @@ class UserController {
       const { refreshToken } = req.cookies;
       const userData = await userService.refresh(refreshToken);
 
-      res.cookie('refreshToken', userData.refreshToken, {
-        maxAge: COOKIE_AGE,
-        httpOnly: true,
-        secure: true,
-        sameSite: 'None',
-      });
+      res.cookie('refreshToken', userData.refreshToken, { maxAge: COOKIE_AGE, httpOnly: true });
       res.json(userData);
     } catch (error) {
       next(error);
