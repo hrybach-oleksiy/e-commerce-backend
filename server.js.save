@@ -16,7 +16,7 @@ const swaggerDefinition = {
   openapi: '3.0.0',
   info: {
     title: 'Express API for e-commerce pet project',
-    version: '1.0.1',
+    version: '1.0.0',
     description: 'This is a REST API application made with Express. It retrieves data from the app server',
     license: {
       name: 'Licensed Under MIT',
@@ -37,27 +37,32 @@ const swaggerDefinition = {
 
 const swaggerOptions = {
   swaggerDefinition,
-  apis: ['./router/*.js', './models/*.js', './schemas/*.js'],
+  apis: ['./router/*.js', './models/*.js'],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-app.use(express.json());
-app.use(cookieParser());
+//app.use(express.json());
+//app.use(cookieParser());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(
   cors({
-    origin: ['https://hrybach-oleksiy.github.io', 'http://localhost:5173'],
+    origin: [
+      'https://hrybach-oleksiy.github.io',
+      'http://127.0.0.1:5173',
+     // 'http://127.0.0.1:4173',
+     // 'http://localhost:3000',
+     // 'http://localhost:5173',
+     // 'https://codefrondlers.store/jsfe23q4',
+    ],
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204,
   }),
 );
+app.use(express.json());
+app.use(cookieParser());
 app.use('/api', router);
-app.use((req, res, next) => {
-  res.setHeader('Permissions-Policy', 'interest-cohort=()');
-  next();
-});
 app.use(errorMiddleware);
 
 const start = async () => {
