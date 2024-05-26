@@ -14,8 +14,14 @@ class ProductService {
       if (filter.weight) {
         filterOptions.weight = { $gte: filter.weight };
       }
+      let wheelBaseFilter = {};
       if (filter.minBase && filter.maxBase) {
-        filterOptions['Wheel Base H'] = { $gte: filter.minBase, $lte: filter.maxBase };
+        wheelBaseFilter = {
+          $or: [
+            { 'sizing.Small (43cm).Wheel Base H': { $gte: filter.minBase, $lte: filter.maxBase } },
+            { 'sizing.Medium (45cm).Wheel Base H': { $gte: filter.minBase, $lte: filter.maxBase } },
+          ],
+        };
       }
       let priceFilter = {};
       if (filter.minPrice && filter.maxPrice) {
@@ -26,16 +32,16 @@ class ProductService {
           ],
         };
       }
-      let seatTubeFilter = {};
+      let frameSizeFilter = {};
       if (filter.frameSize) {
-        seatTubeFilter = {
+        frameSizeFilter = {
           $or: [
             { 'sizing.Small (43cm).Seat Tube (C-T) A': filter.frameSize },
             { 'sizing.Medium (45cm).Seat Tube (C-T) A': filter.frameSize },
           ],
         };
       }
-      filterOptions['$and'] = [priceFilter, seatTubeFilter];
+      filterOptions['$and'] = [priceFilter, frameSizeFilter, wheelBaseFilter];
     }
 
     const projection = {
