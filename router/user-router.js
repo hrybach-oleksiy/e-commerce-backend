@@ -1,5 +1,6 @@
 const express = require('express');
 const userController = require('../controllers/user-controller');
+const { auth } = require('../middlewares/auth');
 
 const userRouter = express.Router();
 
@@ -211,11 +212,30 @@ const userRouter = express.Router();
  *         description: Unexpected error
  */
 
+/**
+ * @swagger
+ * /users:
+ *   patch:
+ *     summary: Partial user data update.
+ *     tags: [Users]
+ *     description: Partial user data update.
+ *     responses:
+ *       200:
+ *         description: Updated user data.
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       5XX:
+ *         description: Unexpected error
+ */
+
 userRouter.route('/registration').post(userController.registration);
 userRouter.route('/activation/:link').get(userController.activation);
 userRouter.route('/login').post(userController.login);
 userRouter.route('/logout').post(userController.logout);
 userRouter.route('/refresh').get(userController.refresh);
 userRouter.route('/check-email').post(userController.checkEmail);
+userRouter.route('/').patch(auth, userController.update);
 
 module.exports = userRouter;

@@ -6,6 +6,9 @@ const UserDto = require('../dtos/user-dto');
 const mailService = require('./mail-service');
 const ApiError = require('../exceptions/api-error');
 
+const errDublicateKey = 11000;
+const saltRounds = 10;
+
 class UserService {
   async registration(body) {
     const { email, password, firstName, lastName, dateOfBirth, addresses } = body;
@@ -15,7 +18,7 @@ class UserService {
       throw ApiError.BadRequest(`User with ${email} is already exist`);
     }
 
-    const hashPassword = await bcrypt.hash(password, 3);
+    const hashPassword = await this.getHashedPassword(password);
     const activationLink = uuid.v4();
     const user = await UserModel.create({
       email,
@@ -33,7 +36,7 @@ class UserService {
     await mailService.sendActivationMail(email, `${process.env.API_URL}/api/users/activation/${activationLink}`);
 
     const userDto = new UserDto(user);
-    const tokens = tokenService.generateTokens({ ...userDto });
+    const tokens = tokenService.generateTokens({ sub: userDto.id });
 
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
@@ -69,7 +72,7 @@ class UserService {
     }
 
     const userDto = new UserDto(user);
-    const tokens = tokenService.generateTokens({ ...userDto });
+    const tokens = tokenService.generateTokens({ sub: userDto.id });
 
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
@@ -93,13 +96,38 @@ class UserService {
       throw ApiError.UnauthorizedError();
     }
 
-    const user = await UserModel.findById(userData.id);
+    const user = await UserModel.findById(userData.sub);
     const userDto = new UserDto(user);
-    const tokens = tokenService.generateTokens({ ...userDto });
+    const tokens = tokenService.generateTokens({ sub: userDto.id });
 
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
     return { ...tokens, user: userDto };
+  }
+
+  async update(userID, fieldsToUpdate) {
+    const user = await UserModel.findById(userID);
+    if (!user) {
+      throw ApiError.NotFoundError('User not found.');
+    }
+    if (fieldsToUpdate.password && typeof fieldsToUpdate.password === 'string') {
+      fieldsToUpdate.password = await this.getHashedPassword(fieldsToUpdate.password);
+    }
+    try {
+      await UserModel.findOneAndUpdate({ _id: userID }, fieldsToUpdate);
+    } catch (error) {
+      if (error.code === errDublicateKey) {
+        throw ApiError.BadRequest('User with such email already exists.');
+      }
+      throw error;
+    }
+    const updatedUser = await UserModel.findById(userID);
+    return new UserDto(updatedUser);
+  }
+
+  async getHashedPassword(password) {
+    const salt = await bcrypt.genSalt(saltRounds);
+    return bcrypt.hash(password, salt);
   }
 }
 

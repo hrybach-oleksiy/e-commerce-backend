@@ -1,5 +1,6 @@
 const { response } = require('express');
 const userService = require('../services/user-service');
+const tokenService = require('../services/token-service');
 
 class UserController {
   async registration(req, res, next) {
@@ -84,6 +85,28 @@ class UserController {
         sameSite: 'None',
       });
       res.json(userData);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async update(req, resp, next) {
+    const fieldsToUpdate = {
+      email: req.body.email,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      dateOfBirth: req.body.dateOfBirth,
+      password: req.body.password,
+    };
+    if (req.body.addresses) {
+      fieldsToUpdate.addresses = {
+        shippingAddresses: req.body.addresses.shippingAddresses,
+        billingAddresses: req.body.addresses.billingAddresses,
+      };
+    }
+    try {
+      const updatedUser = await userService.update(req.userID, fieldsToUpdate);
+      return resp.json(updatedUser);
     } catch (error) {
       next(error);
     }
