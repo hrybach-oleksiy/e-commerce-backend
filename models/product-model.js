@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
-const specsSchema = require('../schemas/product/specs-schema');
-const sizeSchema = require('../schemas/product/size-schema');
+const specsSchema = require('../schemas/specs-schema');
+const sizeSchema = require('../schemas/size-schema');
 
 /**
  * @swagger
@@ -12,7 +12,7 @@ const sizeSchema = require('../schemas/product/size-schema');
  *         category:
  *           type: string
  *           description: The category of the product.
- *           example: "Bicycles"
+ *           example: "bikes"
  *           unique: true
  *         title:
  *           type: string
@@ -67,12 +67,7 @@ const sizeSchema = require('../schemas/product/size-schema');
  *               description: Additional specifications of the product.
  *               example: "This bike meets all safety standards."
  *         sizing:
- *           type: object
- *           properties:
- *             Small (43 cm):
- *               $ref: '#/components/schemas/Size'
- *             Medium (45 cm):
- *               $ref: '#/components/schemas/Size'
+ *           $ref: '#/components/schemas/Size'
  */
 
 const productSchema = new Schema({
