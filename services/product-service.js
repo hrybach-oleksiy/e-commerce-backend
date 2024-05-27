@@ -9,6 +9,9 @@ class ProductService {
     if (filter.color) {
       filterOptions.color = filter.color;
     }
+    if (filter.rating) {
+      filterOptions.rating = { $gte: filter.rating };
+    }
 
     if (filter.category === 'bikes') {
       if (filter.weight) {
@@ -18,8 +21,9 @@ class ProductService {
       if (filter.minBase && filter.maxBase) {
         wheelBaseFilter = {
           $or: [
-            { 'sizing.Small (43cm).Wheel Base H': { $gte: filter.minBase, $lte: filter.maxBase } },
-            { 'sizing.Medium (45cm).Wheel Base H': { $gte: filter.minBase, $lte: filter.maxBase } },
+            { 'sizing.Small (50 cm).Wheel Base': { $gte: filter.minBase, $lte: filter.maxBase } },
+            { 'sizing.Medium (53 cm).Wheel Base': { $gte: filter.minBase, $lte: filter.maxBase } },
+            { 'sizing.Large (56 cm).Wheel Base': { $gte: filter.minBase, $lte: filter.maxBase } },
           ],
         };
       }
@@ -36,8 +40,9 @@ class ProductService {
       if (filter.frameSize) {
         frameSizeFilter = {
           $or: [
-            { 'sizing.Small (43cm).Seat Tube (C-T) A': filter.frameSize },
-            { 'sizing.Medium (45cm).Seat Tube (C-T) A': filter.frameSize },
+            { 'sizing.Small (50 cm).Seat Tube': filter.frameSize },
+            { 'sizing.Medium (53 cm).Seat Tube': filter.frameSize },
+            { 'sizing.Large (56 cm).Seat Tube': filter.frameSize },
           ],
         };
       }

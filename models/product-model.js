@@ -41,12 +41,17 @@ const sizeSchema = require('../schemas/size-schema');
  *           type: number
  *           format: decimal
  *           description: The price of the product with discount.
- *           example: 99.99
+ *           example: 599.99
  *           required: true
  *         color:
  *           type: string
  *           description: The color of the product.
  *           example: "Red"
+ *         rating:
+ *           type: number
+ *           format: decimal
+ *           description: The rating of the product (from 0 to 5 in increments of 0.5).
+ *           example: 3.5
  *         overview:
  *           type: array
  *           items:
@@ -57,7 +62,7 @@ const sizeSchema = require('../schemas/size-schema');
  *           $ref: '#/components/schemas/Specs'
  *         weight:
  *           type: number
- *           description: The weight limit of the product.
+ *           description: The weight limit of the bike (100/115/130kg).
  *           example: 100
  *         notes:
  *           type: object
@@ -94,16 +99,16 @@ const productSchema = new Schema({
     required: true,
   },
   'discounted price': Number,
-  color: {
-    type: String,
-  },
+  color: String,
+  rating: Number,
   overview: [String],
   specs: specsSchema,
   weight: Number,
   notes: { Specifications: String },
   sizing: {
-    'Small (43 cm)': sizeSchema,
-    'Medium (45 cm)': sizeSchema,
+    'Small (50 cm)': sizeSchema,
+    'Medium (53 cm)': sizeSchema,
+    'Large (56 cm)': sizeSchema,
   },
 });
 

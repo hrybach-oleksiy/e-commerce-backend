@@ -62,8 +62,8 @@ const productRouter = express.Router();
  *                 example: 2000
  *               weight:
  *                 type: number
- *                 description: Minimum bike weight (200 - 350 Lbs (step 25))
- *                 example: 275
+ *                 description: Maximum rider weight (100 - 130 kg (step 15))
+ *                 example: 115
  *               minBase:
  *                 type: number
  *                 description: Minimum bike wheel base of range (mm)
