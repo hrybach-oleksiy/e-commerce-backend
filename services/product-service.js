@@ -49,20 +49,87 @@ class ProductService {
       filterOptions['$and'] = [priceFilter, frameSizeFilter, wheelBaseFilter];
     }
 
-    const projection = {
-      title: 1,
-      price: 1,
-      rating: 1,
-      'vendor code': 1,
-      'discounted price': 1,
-    };
+    // const projection = {
+    //   title: 1,
+    //   price: 1,
+    //   rating: 1,
+    //   'vendor code': 1,
+    //   'discounted price': 1,
+    // };
 
-    const products = await ProductModel.find(filterOptions, projection);
+    const products = await ProductModel.find(filterOptions);
     return products;
   }
 
-  async getAllProductsData() {
-    const products = await ProductModel.find();
+  async getAllProductsData(req, res) {
+    const filters = req.body;
+    console.log(filters);
+
+    const query = {};
+
+    // Category Filter
+    if (filters.categories && filters.categories.length > 0) {
+      query.category = { $in: filters.categories };
+    }
+
+    // Price Filter
+    if (filters.minPrice !== undefined || filters.maxPrice !== undefined) {
+      query.price = {};
+      if (filters.minPrice !== undefined) {
+        query.price.$gte = filters.minPrice;
+      }
+      if (filters.maxPrice !== undefined) {
+        query.price.$lte = filters.maxPrice;
+      }
+    }
+
+    // Color Filter
+    if (filters.colors && filters.colors.length > 0) {
+      query.color = { $in: filters.colors };
+    }
+
+    // Weight Filter
+    if (filters.minWeight !== undefined || filters.maxWeight !== undefined) {
+      query.weight = {};
+      if (filters.minWeight !== undefined) {
+        query.weight.$gte = filters.minWeight;
+      }
+      if (filters.maxWeight !== undefined) {
+        query.weight.$lte = filters.maxWeight;
+      }
+    }
+
+    // rating Filter
+    if (filters.minRating !== undefined || filters.maxRating !== undefined) {
+      query.rating = {};
+      if (filters.minRating !== undefined) {
+        query.rating.$gte = filters.minRating;
+      }
+      if (filters.maxRating !== undefined) {
+        query.rating.$lte = filters.maxRating;
+      }
+    }
+
+    // Wheel Base Filter
+    if (filters.wheelBases && filters.wheelBases.length > 0) {
+      query.$or = query.$or || [];
+      filters.wheelBases.forEach((base) => {
+        const sizes = ['Small (50 cm)', 'Medium (53 cm)', 'Large (56 cm)'];
+        sizes.forEach((size) => {
+          query.$or.push({ [`sizing.${size}.Wheel Base`]: base });
+        });
+      });
+    }
+
+    // Frame Size Filter
+    if (filters.frameSizes && filters.frameSizes.length > 0) {
+      query.$or = query.$or || [];
+      filters.frameSizes.forEach((size) => {
+        query.$or.push({ [`sizing.${size}`]: { $exists: true } });
+      });
+    }
+
+    const products = await ProductModel.find(query);
     return products;
   }
 
