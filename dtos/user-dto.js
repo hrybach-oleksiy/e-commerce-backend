@@ -1,3 +1,5 @@
+const AddressDto = require('./address-dto');
+
 /* eslint-disable no-underscore-dangle */
 module.exports = class UserDto {
   constructor(model) {
@@ -8,22 +10,8 @@ module.exports = class UserDto {
     this.lastName = model.lastName;
     this.dateOfBirth = model.dateOfBirth;
     this.addresses = {
-      shippingAddresses: model.addresses.shippingAddresses.map((addr) => ({
-        street: addr.street,
-        city: addr.city,
-        postalCode: addr.postalCode,
-        country: addr.country,
-        isDefault: addr.isDefault,
-        id: addr._id,
-      })),
-      billingAddresses: model.addresses.billingAddresses.map((addr) => ({
-        street: addr.street,
-        city: addr.city,
-        postalCode: addr.postalCode,
-        country: addr.country,
-        isDefault: addr.isDefault,
-        id: addr._id,
-      })),
+      shippingAddresses: model.addresses.shippingAddresses.map((addr) => new AddressDto(addr)),
+      billingAddresses: model.addresses.billingAddresses.map((addr) => new AddressDto(addr)),
     };
   }
 };
