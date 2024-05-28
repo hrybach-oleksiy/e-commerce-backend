@@ -1,54 +1,33 @@
 const ProductModel = require('../models/product-model');
 
 class ProductService {
-  async getProducts(filter) {
-    let filterOptions = {};
-    if (filter.category) {
-      filterOptions.category = filter.category;
-    }
-    if (filter.color) {
-      filterOptions.color = filter.color;
-    }
-    if (filter.rating) {
-      filterOptions.rating = { $gte: filter.rating };
-    }
+  async getProducts(payload) {
+    const { filters, page, pageSize } = payload;
 
-    if (filter.category === 'bikes') {
-      if (filter.weight) {
-        filterOptions.weight = { $gte: filter.weight };
-      }
-      let wheelBaseFilter = {};
-      if (filter.minBase && filter.maxBase) {
-        wheelBaseFilter = {
-          $or: [
-            { 'sizing.Small (50 cm).Wheel Base': { $gte: filter.minBase, $lte: filter.maxBase } },
-            { 'sizing.Medium (53 cm).Wheel Base': { $gte: filter.minBase, $lte: filter.maxBase } },
-            { 'sizing.Large (56 cm).Wheel Base': { $gte: filter.minBase, $lte: filter.maxBase } },
-          ],
-        };
-      }
-      let priceFilter = {};
-      if (filter.minPrice && filter.maxPrice) {
-        priceFilter = {
-          $or: [
-            { 'discounted price': { $gte: filter.minPrice, $lte: filter.maxPrice } },
-            { 'discounted price': { $exists: false }, price: { $gte: filter.minPrice, $lte: filter.maxPrice } },
-          ],
-        };
-      }
-      let frameSizeFilter = {};
-      if (filter.frameSize) {
-        frameSizeFilter = {
-          $or: [
-            { 'sizing.Small (50 cm).Seat Tube': filter.frameSize },
-            { 'sizing.Medium (53 cm).Seat Tube': filter.frameSize },
-            { 'sizing.Large (56 cm).Seat Tube': filter.frameSize },
-          ],
-        };
-      }
-      filterOptions['$and'] = [priceFilter, frameSizeFilter, wheelBaseFilter];
-    }
+    let query = {};
 
+    if (filters.colors && filters.colors.length > 0) {
+      query.color = { $in: filters.colors };
+    }
+    if (filters.categories && filters.categories.length > 0) {
+      query.category = { $in: filters.categories };
+    }
+    if (filters.minPrice !== undefined && filters.maxPrice !== undefined) {
+      query.price = { $gte: filters.minPrice, $lte: filters.maxPrice };
+    }
+    if (filters.rating && filters.rating.length > 0) {
+      query.rating = { $in: filters.rating };
+    }
+    if (filters.weight && filters.weight.length > 0) {
+      query.weight = { $in: filters.weight };
+    }
+    // if (filters.wheelBases && filters.wheelBases.length > 0) {
+    //   query['sizing.Wheel Base'] = { $in: filters.wheelBases };
+    // }
+    // if (filters.frameSizes && filters.frameSizes.length > 0) {
+    //   const frameSizeConditions = filters.frameSizes.map((size) => ({ [`sizing.${size}`]: { $exists: true } }));
+    //   query.$or = frameSizeConditions;
+    // }
     const projection = {
       title: 1,
       price: 1,
@@ -57,8 +36,13 @@ class ProductService {
       'discounted price': 1,
     };
 
-    const products = await ProductModel.find(filterOptions, projection);
-    return products;
+    const total = await ProductModel.countDocuments(query);
+    const products = await ProductModel.find(query, projection)
+      // .sort({ [sorts[0].field]: sorts[0].order === 'ASC' ? 1 : -1 })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
+
+    return { total, products };
   }
 
   async getAllProductsData() {
@@ -69,6 +53,24 @@ class ProductService {
   async getProductById(productId) {
     const product = await ProductModel.findById(productId);
     return product;
+  }
+
+  async getFilters() {
+    const products = await ProductModel.find({});
+
+    const categories = [...new Set(products.map((product) => product.category))];
+    const colors = [...new Set(products.map((product) => product.color))];
+    // const wheelBases = [
+    //   ...new Set(products.flatMap((product) => Object.values(product.sizing).map((size) => size['Wheel Base']))),
+    // ];
+
+    const frameSizes = [...new Set(products.flatMap((product) => Object.keys(product.sizing)))];
+    const minPrice = Math.min(...products.map((product) => product.price));
+    const maxPrice = Math.max(...products.map((product) => product.price));
+    const rating = [...new Set(products.map((product) => product.rating))];
+    const weight = [...new Set(products.map((product) => product.weight))];
+
+    return { categories, colors, weight, frameSizes, minPrice, maxPrice, rating };
   }
 }
 
