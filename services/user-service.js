@@ -1,8 +1,10 @@
 const bcrypt = require('bcrypt');
+const { ObjectId } = require('mongodb');
 const uuid = require('uuid');
 const UserModel = require('../models/user-model');
 const tokenService = require('./token-service');
 const UserDto = require('../dtos/user-dto');
+const AddressDto = require('../dtos/address-dto');
 const mailService = require('./mail-service');
 const ApiError = require('../exceptions/api-error');
 
@@ -106,15 +108,14 @@ class UserService {
   }
 
   async update(userID, fieldsToUpdate) {
-    const user = await UserModel.findById(userID);
-    if (!user) {
-      throw ApiError.NotFoundError('User not found.');
-    }
     if (fieldsToUpdate.password && typeof fieldsToUpdate.password === 'string') {
       fieldsToUpdate.password = await this.getHashedPassword(fieldsToUpdate.password);
     }
     try {
-      await UserModel.findOneAndUpdate({ _id: userID }, fieldsToUpdate);
+      const wasUpdated = await UserModel.findOneAndUpdate({ _id: userID }, fieldsToUpdate, { passRawResult: true });
+      if (!wasUpdated) {
+        throw ApiError.BadRequest('User not found.');
+      }
     } catch (error) {
       if (error.code === errDublicateKey) {
         throw ApiError.BadRequest('User with such email already exists.');
@@ -123,6 +124,64 @@ class UserService {
     }
     const updatedUser = await UserModel.findById(userID);
     return new UserDto(updatedUser);
+  }
+
+  async addAddress(userID, addressType, address) {
+    const user = await UserModel.findById(userID);
+    if (!user) {
+      throw ApiError.NotFoundError('User not found');
+    }
+    const addresses = user.addresses[addressType] || [];
+    if (address.isDefault) {
+      addresses.forEach((addr) => {
+        addr.isDefault = false;
+      });
+    }
+    const newAddress = {
+      _id: new ObjectId(),
+      street: address.street,
+      city: address.city,
+      postalCode: address.postalCode,
+      country: address.country,
+      isDefault: address.isDefault,
+    };
+    addresses.push(newAddress);
+
+    await UserModel.findOneAndUpdate({ _id: userID }, { $set: { [`addresses.${addressType}`]: addresses } });
+    return new AddressDto(newAddress);
+  }
+
+  async updateAddress(userID, addressType, address) {
+    const user = await UserModel.findById(userID);
+    if (!user) {
+      throw ApiError.NotFoundError('User not found');
+    }
+    let updatedAddress;
+    const addresses = user.addresses[addressType] || [];
+    for (const addr of addresses) {
+      if (String(addr._id) === address.id) {
+        addr.street = address.street;
+        addr.city = address.city;
+        addr.postalCode = address.postalCode;
+        addr.country = address.country;
+        addr.isDefault = address.isDefault;
+        updatedAddress = addr;
+        continue;
+      }
+      if (address.isDefault) {
+        addr.isDefault = false;
+      }
+    }
+    if (!updatedAddress) {
+      throw ApiError.NotFoundError('Address not found');
+    }
+
+    await UserModel.findOneAndUpdate({ _id: userID }, { $set: { [`addresses.${addressType}`]: addresses } });
+    return new AddressDto(updatedAddress);
+  }
+
+  async deleteAddress(userID, addressType, addressID) {
+    await UserModel.findOneAndUpdate({ _id: userID }, { $pull: { [`addresses.${addressType}`]: { _id: addressID } } });
   }
 
   async getHashedPassword(password) {

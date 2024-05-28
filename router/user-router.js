@@ -214,14 +214,126 @@ const userRouter = express.Router();
 
 /**
  * @swagger
- * /users:
+ * /users/{userID}:
  *   patch:
  *     summary: Partial user data update.
  *     tags: [Users]
  *     description: Partial user data update.
+ *     parameters:
+ *       - in: path
+ *         name: userID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User ID.
  *     responses:
  *       200:
  *         description: Updated user data.
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       5XX:
+ *         description: Unexpected error
+ */
+
+/**
+ * @swagger
+ * /users/{userID}/addresses/{type}:
+ *   post:
+ *     summary: Add address.
+ *     tags: [Users]
+ *     description: Add address.
+ *     parameters:
+ *       - in: path
+ *         name: userID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User ID.
+ *       - in: path
+ *         name: type
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Address type (eg. shipping, billing).
+ *     responses:
+ *       200:
+ *         description: Added address.
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       5XX:
+ *         description: Unexpected error
+ */
+
+/**
+ * @swagger
+ * /users/{userID}/addresses/{type}/{id}:
+ *   delete:
+ *     summary: Delete address.
+ *     tags: [Users]
+ *     description: Delete address.
+ *     parameters:
+ *       - in: path
+ *         name: userID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User ID.
+ *       - in: path
+ *         name: type
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Address type (eg. shipping, billing).
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Address ID.
+ *     responses:
+ *       204:
+ *         description: No content.
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       5XX:
+ *         description: Unexpected error
+ */
+
+/**
+ * @swagger
+ * /users/{userID}/addresses/{type}/{id}:
+ *   put:
+ *     summary: Update address.
+ *     tags: [Users]
+ *     description: Update address.
+ *     parameters:
+ *       - in: path
+ *         name: userID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User ID.
+ *       - in: path
+ *         name: type
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Address type (eg. shipping, billing).
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Address ID.
+ *     responses:
+ *       200:
+ *         description: Updated address.
  *       401:
  *         description: Unauthorized
  *       403:
@@ -236,6 +348,9 @@ userRouter.route('/login').post(userController.login);
 userRouter.route('/logout').post(userController.logout);
 userRouter.route('/refresh').get(userController.refresh);
 userRouter.route('/check-email').post(userController.checkEmail);
-userRouter.route('/').patch(auth, userController.update);
+userRouter.route('/:userID').patch(auth, userController.update);
+userRouter.route('/:userID/addresses/:type').post(auth, userController.addAddress);
+userRouter.route('/:userID/addresses/:type/:id').delete(auth, userController.deleteAddress);
+userRouter.route('/:userID/addresses/:type/:id').put(auth, userController.updateAddress);
 
 module.exports = userRouter;
