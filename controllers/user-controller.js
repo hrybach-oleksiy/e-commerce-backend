@@ -1,5 +1,5 @@
-const { response } = require('express');
 const userService = require('../services/user-service');
+const ApiError = require('../exceptions/api-error');
 
 class UserController {
   async registration(req, res, next) {
@@ -84,6 +84,88 @@ class UserController {
         sameSite: 'None',
       });
       res.json(userData);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async update(req, resp, next) {
+    if (req.userID !== req.params.userID) {
+      return next(ApiError.ForbiddenError());
+    }
+    const fieldsToUpdate = {
+      email: req.body.email,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      dateOfBirth: req.body.dateOfBirth,
+      password: req.body.password,
+    };
+    try {
+      const updatedUser = await userService.update(req.userID, fieldsToUpdate);
+      return resp.json(updatedUser);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async addAddress(req, resp, next) {
+    if (req.userID !== req.params.userID) {
+      return next(ApiError.ForbiddenError());
+    }
+    if (req.params.type !== 'shipping' && req.params.type !== 'billing') {
+      return next(ApiError.BadRequest('Unknown address type.'));
+    }
+    const addressType = req.params.type + 'Addresses';
+    const address = {
+      street: req.body.street,
+      city: req.body.city,
+      postalCode: req.body.postalCode,
+      country: req.body.country,
+      isDefault: req.body.isDefault,
+    };
+    try {
+      const savedAddress = await userService.addAddress(req.userID, addressType, address);
+      return resp.json(savedAddress);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteAddress(req, resp, next) {
+    if (req.userID !== req.params.userID) {
+      return next(ApiError.ForbiddenError());
+    }
+    if (req.params.type !== 'shipping' && req.params.type !== 'billing') {
+      return next(ApiError.BadRequest('Unknown address type.'));
+    }
+    const addressType = req.params.type + 'Addresses';
+    try {
+      await userService.deleteAddress(req.userID, addressType, req.params.id);
+      return resp.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateAddress(req, resp, next) {
+    if (req.userID !== req.params.userID) {
+      return next(ApiError.ForbiddenError());
+    }
+    if (req.params.type !== 'shipping' && req.params.type !== 'billing') {
+      return next(ApiError.BadRequest('Unknown address type.'));
+    }
+    const addressType = req.params.type + 'Addresses';
+    const address = {
+      id: req.params.id,
+      street: req.body.street,
+      city: req.body.city,
+      postalCode: req.body.postalCode,
+      country: req.body.country,
+      isDefault: req.body.isDefault,
+    };
+    try {
+      const updatedAddress = await userService.updateAddress(req.userID, addressType, address);
+      return resp.json(updatedAddress);
     } catch (error) {
       next(error);
     }
