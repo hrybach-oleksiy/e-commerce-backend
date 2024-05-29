@@ -111,8 +111,8 @@ const productRouter = express.Router();
  *
  */
 
-productRouter.route('/').post(productController.getAllProductsData);
-// productRouter.route('/').get(productController.getAllProductsData);
-productRouter.route('/:id').get(productController.getProductById);
+productRouter.route('/').post(productController.getProducts);
+productRouter.route('/').get(productController.getProduct);
+productRouter.route('/filters').post(productController.getFilters);
 
 module.exports = productRouter;

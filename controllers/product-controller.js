@@ -3,29 +3,29 @@ const productService = require('../services/product-service');
 class ProductController {
   async getProducts(req, res, next) {
     try {
-      const filter = req.body;
-      const products = await productService.getProducts(filter);
+      const payload = req.body;
+      const products = await productService.getProducts(payload);
       return res.json(products);
     } catch (error) {
       next(error);
     }
   }
 
-  async getAllProductsData(req, res, next) {
-    console.log(req.body);
+  async getProduct(req, res, next) {
+    const vendorCode = req.query.vc;
+    console.log(vendorCode);
     try {
-      const products = await productService.getAllProductsData(req);
-      return res.json(products);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async getProductById(req, res, next) {
-    try {
-      const productId = req.params.id;
-      const product = await productService.getProductById(productId);
+      const product = await productService.getProduct(vendorCode);
       return res.json(product);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getFilters(req, res, next) {
+    try {
+      const filtersData = await productService.getFilters();
+      return res.json(filtersData);
     } catch (error) {
       next(error);
     }
