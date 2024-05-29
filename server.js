@@ -45,27 +45,27 @@ const swaggerOptions = {
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-const dirName = path.resolve();
-const uploadFolder = path.join(dirName, 'uploads');
-fs.mkdirSync(uploadFolder, { recursive: true });
+// const dirName = path.resolve();
+// const uploadFolder = path.join(dirName, 'uploads');
+// fs.mkdirSync(uploadFolder, { recursive: true });
 
-const storage = multer.diskStorage({
-  destination: (request, file, callback) => {
-    console.log(file);
-    const productId = request.params.id;
-    const folderPath = path.join(uploadFolder, productId);
-    return callback(null, uploadFolder);
-  },
-  filename: (request, file, callback) => {
-    console.log(file);
-    const originalFileName = file.originalname.split('.')[0];
-    const fileName = originalFileName + path.extname(file.originalname);
-    console.log(fileName);
-    return callback(null, fileName);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (request, file, callback) => {
+//     console.log(file);
+//     const productId = request.params.id;
+//     const folderPath = path.join(uploadFolder, productId);
+//     return callback(null, uploadFolder);
+//   },
+//   filename: (request, file, callback) => {
+//     console.log(file);
+//     const originalFileName = file.originalname.split('.')[0];
+//     const fileName = originalFileName + path.extname(file.originalname);
+//     console.log(fileName);
+//     return callback(null, fileName);
+//   },
+// });
 
-const upload = multer({ storage: storage });
+// const upload = multer({ storage: storage });
 
 app.use(express.json());
 app.use(cookieParser());
