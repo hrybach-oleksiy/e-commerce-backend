@@ -11,10 +11,11 @@ class ProductController {
     }
   }
 
-  async getProductById(req, res, next) {
+  async getProduct(req, res, next) {
+    const vendorCode = req.query.vc;
+    console.log(vendorCode);
     try {
-      const productId = req.params.id;
-      const product = await productService.getProductById(productId);
+      const product = await productService.getProduct(vendorCode);
       return res.json(product);
     } catch (error) {
       next(error);
