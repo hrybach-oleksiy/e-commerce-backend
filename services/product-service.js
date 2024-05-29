@@ -64,7 +64,7 @@ class ProductService {
     const maxPrice = Math.max(...products.map((product) => product.price));
     const rating = [...new Set(products.map((product) => product.rating))];
     const weight = [...new Set(products.map((product) => product.weight))];
-
+    console.log('test');
     return { categories, colors, weight, frameSizes, minPrice, maxPrice, rating };
   }
 }
