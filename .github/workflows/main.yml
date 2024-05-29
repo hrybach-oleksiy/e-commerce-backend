@@ -1,44 +1,40 @@
-# This is a basic workflow to upload files 
+# This is a basic workflow to upload files
 # from GitHub to server via GitHub Actions
 name: Publish Web server on DEV
 
 # Controls when the workflow will run
 on:
-
-  # Triggers the workflow on push request event 
+  # Triggers the workflow on push request event
   # but only for the specific branch
   push:
-    branches: [ main ]
+    branches: [main, release/test]
 
-# A workflow run is made up of one or more jobs 
+# A workflow run is made up of one or more jobs
 # that can run sequentially or in parallel
 jobs:
-
   # This workflow contains a single job called "SFTP-Deploy-Action"
   SFTP-Deploy-Action:
     name: SFTP-Deploy-Action
 
-    # The type of runner that the job will run on 
+    # The type of runner that the job will run on
     # (depends on server but usually this value is works)
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks 
+    # Steps represent a sequence of tasks
     # that will be executed as part of the job
     steps:
-
-      # Checks-out your repository under $GITHUB_WORKSPACE, 
+      # Checks-out your repository under $GITHUB_WORKSPACE,
       # so your job can access it
       - name: Checkout
         uses: actions/checkout@v3
         with:
-
           # Fetch all history for all tags and branches
           fetch-depth: 0
 
           # Checkout a specific branch
-          ref: main
+          ref: ${{ github.ref }}
 
-      # This is a composite GitHub Action (Linux runner) 
+      # This is a composite GitHub Action (Linux runner)
       # for deploying repository content to remote server
       - name: SFTP-Deploy-Action
         uses: milanmk/actions-file-deployer@master
