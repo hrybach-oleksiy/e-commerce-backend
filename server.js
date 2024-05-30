@@ -45,28 +45,6 @@ const swaggerOptions = {
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-// const dirName = path.resolve();
-// const uploadFolder = path.join(dirName, 'uploads');
-// fs.mkdirSync(uploadFolder, { recursive: true });
-
-// const storage = multer.diskStorage({
-//   destination: (request, file, callback) => {
-//     console.log(file);
-//     const productId = request.params.id;
-//     const folderPath = path.join(uploadFolder, productId);
-//     return callback(null, uploadFolder);
-//   },
-//   filename: (request, file, callback) => {
-//     console.log(file);
-//     const originalFileName = file.originalname.split('.')[0];
-//     const fileName = originalFileName + path.extname(file.originalname);
-//     console.log(fileName);
-//     return callback(null, fileName);
-//   },
-// });
-
-// const upload = multer({ storage: storage });
-
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -92,18 +70,12 @@ const start = async () => {
     }
 
     await mongoose.connect(DB_URL);
-    // const db = mongoose.connection;
-    // const collections = await db.db.listCollections().toArray();
-
-    // for (const collection of collections) {
-    //   const count = await db.collection(collection.name).countDocuments();
-    //   console.log(`Collection: ${collection.name}, Documents: ${count}`);
-    // }
     app.listen(PORT, () => {
       console.log(`Server starts on port ${PORT}`, mongoose.connection.name);
     });
   } catch (error) {
     console.log(error);
+    console.log('test console');
   }
 };
 
