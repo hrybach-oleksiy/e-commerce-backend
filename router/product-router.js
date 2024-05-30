@@ -96,11 +96,11 @@ const productRouter = express.Router();
  *                   type: number
  *                   description: Product rating from 0 to 5 (step 0.5)
  *                   example: 4.5
- *                 'vendor code':
+ *                 vendorCode:
  *                   type: number
  *                   description: Product code
  *                   example: 671296
- *                 'discounted price':
+ *                 discountedRouter:
  *                   type: number
  *                   description: Discounted price ($)
  *                   example: 559.99

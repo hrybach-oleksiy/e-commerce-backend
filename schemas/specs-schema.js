@@ -4,7 +4,7 @@ const { Schema } = require('mongoose');
  * @swagger
  * components:
  *   schemas:
- *     specs:
+ *     Specs:
  *       type: object
  *       properties:
  *         frameset:

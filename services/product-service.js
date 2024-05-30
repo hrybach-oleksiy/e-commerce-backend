@@ -46,7 +46,7 @@ class ProductService {
   }
 
   async getProduct(vendorCode) {
-    const product = await ProductModel.findOne({ 'vendor code': vendorCode });
+    const product = await ProductModel.findOne({ vendorCode: vendorCode });
     return product;
   }
 
