@@ -93,15 +93,16 @@ class UserController {
     if (req.userID !== req.params.userID) {
       return next(ApiError.ForbiddenError());
     }
-    const fieldsToUpdate = {
+    const arg = {
       email: req.body.email,
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       dateOfBirth: req.body.dateOfBirth,
       password: req.body.password,
+      newPassword: req.body.newPassword,
     };
     try {
-      const updatedUser = await userService.update(req.userID, fieldsToUpdate);
+      const updatedUser = await userService.update(req.userID, arg);
       return resp.json(updatedUser);
     } catch (error) {
       next(error);

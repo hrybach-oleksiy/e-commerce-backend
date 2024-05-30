@@ -107,15 +107,25 @@ class UserService {
     return { ...tokens, user: userDto };
   }
 
-  async update(userID, fieldsToUpdate) {
-    if (fieldsToUpdate.password && typeof fieldsToUpdate.password === 'string') {
-      fieldsToUpdate.password = await this.getHashedPassword(fieldsToUpdate.password);
+  async update(userID, arg) {
+    const user = await UserModel.findById(userID);
+    if (!user) {
+      throw ApiError.NotFoundError('User not found.');
+    }
+    if (arg.password && typeof arg.password === 'string' && arg.newPassword && typeof arg.newPassword === 'string') {
+      try {
+        const ok = await bcrypt.compare(arg.password, user.password);
+        if (!ok) {
+          throw ApiError.ForbiddenError('Invalid password.');
+        }
+      } catch (error) {
+        throw ApiError.ForbiddenError('Invalid password.');
+      }
+      arg.password = await this.getHashedPassword(arg.newPassword);
+      delete arg.newPassword;
     }
     try {
-      const wasUpdated = await UserModel.findOneAndUpdate({ _id: userID }, fieldsToUpdate, { passRawResult: true });
-      if (!wasUpdated) {
-        throw ApiError.BadRequest('User not found.');
-      }
+      await UserModel.findOneAndUpdate({ _id: userID }, arg);
     } catch (error) {
       if (error.code === errDublicateKey) {
         throw ApiError.BadRequest('User with such email already exists.');
