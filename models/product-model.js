@@ -26,7 +26,7 @@ const sizeSchema = require('../schemas/size-schema');
  *           description: The description of the product.
  *           example: "A high-quality mountain bike suitable for all terrains."
  *           trim: true
- *         vendor code:
+ *         vendorCode:
  *           type: number
  *           description: The vendor code of the product.
  *           example: 123456
@@ -90,7 +90,7 @@ const productSchema = new Schema({
     type: String,
     trim: true,
   },
-  'vendor code': {
+  vendorCode: {
     type: Number,
     unique: true,
   },
@@ -98,18 +98,14 @@ const productSchema = new Schema({
     type: Number,
     required: true,
   },
-  'discounted price': Number,
+  discountedPrice: Number,
   color: String,
   rating: Number,
   overview: [String],
   specs: specsSchema,
   weight: Number,
-  notes: { Specifications: String },
-  sizing: {
-    'Small (50 cm)': sizeSchema,
-    'Medium (53 cm)': sizeSchema,
-    'Large (56 cm)': sizeSchema,
-  },
+  notes: { specifications: String },
+  sizing: sizeSchema,
 });
 
 module.exports = model('Product', productSchema);

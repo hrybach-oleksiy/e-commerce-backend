@@ -7,61 +7,67 @@ const { Schema } = require('mongoose');
  *     Size:
  *       type: object
  *       properties:
- *         Seat Tube:
+ *         seatTube:
  *           type: number
  *           description: The length of the seat tube measured from the center to the top.
  *           example: 440
- *         Top Tube Horizontal:
+ *         topTube Horizontal:
  *           type: number
  *           description: The effective length of the top tube.
  *           example: 535
- *         Head Angle:
+ *         headAngle:
  *           type: number
  *           format: decimal
  *           description: The angle of the head tube.
  *           example: 73.5
- *         Seat Angle:
+ *         seatAngle:
  *           type: number
  *           format: decimal
  *           description: The angle of the seat tube.
  *           example: 74.0
- *         Chainstays:
+ *         chainstays:
  *           type: number
  *           description: The length of the chainstay.
  *           example: 455
- *         BB-Height To Hub:
+ *         bbHeightToHub:
  *           type: number
  *           description: The bottom bracket drop.
  *           example: 70
- *         Wheel Base:
+ *         wheelBase:
  *           type: number
  *           description: The total wheelbase of the bike.
  *           example: 1070
- *         Head Tube:
+ *         headTube:
  *           type: number
  *           description: The length of the head tube.
  *           example: 90
- *         Reach:
+ *         reach:
  *           type: number
  *           description: The sit-bone to centre-of-handlebar measurement.
  *           example: 402
- *         Stack:
+ *         stack:
  *           type: number
  *           description: The vertical distance from the center of the bottom bracket to the virtual horizontal line from the top of the head tube.
  *           example: 615
  */
 
+const sizeGridSchema = new Schema({
+  small: Number,
+  medium: Number,
+  large: Number,
+});
+
 const sizeSchema = new Schema({
-  'Seat Tube': Number,
-  'Top Tube Horizontal': Number,
-  'Head Tube Angle': Number,
-  'Seat Angle': Number,
-  Chainstays: Number,
-  'BB-Height To Hub': Number,
-  'Wheel Base H': Number,
-  'Head Tube': Number,
-  Reach: Number,
-  Stack: Number,
+  seatTube: sizeGridSchema,
+  topTubeHorizontal: sizeGridSchema,
+  headTubeAngle: sizeGridSchema,
+  seatAngle: sizeGridSchema,
+  chainstays: sizeGridSchema,
+  bbHeightToHub: sizeGridSchema,
+  wheelBase: sizeGridSchema,
+  headTube: sizeGridSchema,
+  reach: sizeGridSchema,
+  stack: sizeGridSchema,
 });
 
 module.exports = sizeSchema;
