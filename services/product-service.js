@@ -1,3 +1,4 @@
+const ApiError = require('../exceptions/api-error');
 const ProductModel = require('../models/product-model');
 
 class ProductService {
@@ -41,6 +42,7 @@ class ProductService {
 
   async getProduct(vendorCode) {
     const product = await ProductModel.findOne({ vendorCode: vendorCode });
+    if (!product) throw ApiError.BadRequest(`Product with vendor code ${vendorCode} not found`);
     return product;
   }
 
