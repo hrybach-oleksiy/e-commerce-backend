@@ -51,23 +51,29 @@ const { Schema } = require('mongoose');
  *           example: 615
  */
 
-const sizeGridSchema = new Schema({
-  small: Number,
-  medium: Number,
-  large: Number,
-});
+const sizeGridSchema = new Schema(
+  {
+    small: Number,
+    medium: Number,
+    large: Number,
+  },
+  { _id: false },
+);
 
-const sizeSchema = new Schema({
-  seatTube: sizeGridSchema,
-  topTubeHorizontal: sizeGridSchema,
-  headTubeAngle: sizeGridSchema,
-  seatAngle: sizeGridSchema,
-  chainstays: sizeGridSchema,
-  bbHeightToHub: sizeGridSchema,
-  wheelBase: sizeGridSchema,
-  headTube: sizeGridSchema,
-  reach: sizeGridSchema,
-  stack: sizeGridSchema,
-});
+const sizeSchema = new Schema(
+  {
+    seatTube: sizeGridSchema,
+    topTubeHorizontal: sizeGridSchema,
+    headTubeAngle: sizeGridSchema,
+    seatAngle: sizeGridSchema,
+    chainstays: sizeGridSchema,
+    bbHeightToHub: sizeGridSchema,
+    wheelBase: sizeGridSchema,
+    headTube: sizeGridSchema,
+    reach: sizeGridSchema,
+    stack: sizeGridSchema,
+  },
+  { _id: false },
+);
 
 module.exports = sizeSchema;
