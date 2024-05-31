@@ -3,7 +3,7 @@ const ProductModel = require('../models/product-model');
 
 class ProductService {
   async getProducts(payload) {
-    const { filters, page, pageSize } = payload;
+    const { query: searchQuery, filters, page, pageSize } = payload;
 
     let query = {};
 
@@ -21,6 +21,9 @@ class ProductService {
     }
     if (filters.weight && filters.weight.length > 0) {
       query.weight = { $in: filters.weight };
+    }
+    if (searchQuery && searchQuery.trim().length > 0) {
+      query.title = { $regex: searchQuery, $options: 'i' };
     }
 
     const projection = {
