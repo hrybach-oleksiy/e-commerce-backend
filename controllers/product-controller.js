@@ -13,7 +13,6 @@ class ProductController {
 
   async getProduct(req, res, next) {
     const vendorCode = req.query.vc;
-    console.log(vendorCode);
     try {
       const product = await productService.getProduct(vendorCode);
       return res.json(product);
