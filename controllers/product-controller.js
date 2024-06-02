@@ -11,6 +11,15 @@ class ProductController {
     }
   }
 
+  async getBestSellingProducts(req, res, next) {
+    try {
+      const products = await productService.getBestSellingProducts();
+      return res.json(products);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getProduct(req, res, next) {
     const vendorCode = req.query.vc;
     try {
@@ -21,9 +30,9 @@ class ProductController {
     }
   }
 
-  async getFilters(req, res, next) {
+  async getFiltersData(req, res, next) {
     try {
-      const filtersData = await productService.getFilters();
+      const filtersData = await productService.getFiltersData();
       return res.json(filtersData);
     } catch (error) {
       next(error);

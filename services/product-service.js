@@ -3,7 +3,7 @@ const ProductModel = require('../models/product-model');
 
 class ProductService {
   async getProducts(payload) {
-    const { query: searchQuery, filters, page, pageSize } = payload;
+    const { query: searchQuery, filters, sorts, page, pageSize } = payload;
 
     let query = {};
 
@@ -26,6 +26,25 @@ class ProductService {
       query.title = { $regex: searchQuery, $options: 'i' };
     }
 
+    const addFields = {
+      actualPrice: {
+        $cond: { if: { $ifNull: ['$discountedPrice', false] }, then: '$discountedPrice', else: '$price' },
+      },
+    };
+
+    let sortOptions = {};
+    if (sorts && sorts.length > 0) {
+      sorts.forEach((sort) => {
+        if (sort.field) {
+          if (sort.field === 'price') {
+            sortOptions = { actualPrice: sort.order === 'ASC' ? 1 : -1 };
+          } else {
+            sortOptions[sort.field] = sort.order === 'ASC' ? 1 : -1;
+          }
+        }
+      });
+    }
+
     const projection = {
       title: 1,
       price: 1,
@@ -35,13 +54,36 @@ class ProductService {
       thumbs: { $slice: 1 },
     };
 
+    const pipeline = [
+      { $match: query },
+      { $addFields: addFields },
+      { $addFields: addFields },
+      ...(Object.keys(sortOptions).length > 0 ? [{ $sort: sortOptions }] : []),
+      { $skip: (page - 1) * pageSize },
+      { $limit: pageSize },
+      { $project: projection },
+    ];
+
     const total = await ProductModel.countDocuments(query);
-    const products = await ProductModel.find(query, projection)
-      // .sort({ [sorts[0].field]: sorts[0].order === 'ASC' ? 1 : -1 })
-      .skip((page - 1) * pageSize)
-      .limit(pageSize);
+    const products = await ProductModel.aggregate(pipeline);
 
     return { total, products };
+  }
+
+  async getBestSellingProducts() {
+    const topProducts = await ProductModel.find({}).sort({ rating: -1 }).limit(12).exec();
+    const shuffledProducts = topProducts.sort(() => 0.5 - Math.random());
+    const selectedProducts = shuffledProducts.slice(0, 4);
+    const products = selectedProducts.map((product) => ({
+      _id: product._id,
+      title: product.title,
+      price: product.price,
+      rating: product.rating,
+      vendorCode: product.vendorCode,
+      discountedPrice: product.discountedPrice,
+    }));
+
+    return { total: 4, products };
   }
 
   async getProduct(vendorCode) {
@@ -50,7 +92,7 @@ class ProductService {
     return product;
   }
 
-  async getFilters() {
+  async getFiltersData() {
     const products = await ProductModel.find({});
 
     const categories = [...new Set(products.map((product) => product.category))];
