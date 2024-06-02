@@ -71,7 +71,7 @@ class ProductService {
   }
 
   async getBestSellingProducts() {
-    const topProducts = await ProductModel.find({}).sort({ rating: -1 }).limit(12).exec();
+    const topProducts = await ProductModel.find({ category: 'bikes' }).sort({ rating: -1 }).limit(12).exec();
     const shuffledProducts = topProducts.sort(() => 0.5 - Math.random());
     const selectedProducts = shuffledProducts.slice(0, 4);
     const products = selectedProducts.map((product) => ({
