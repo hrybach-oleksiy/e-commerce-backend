@@ -112,7 +112,8 @@ const productRouter = express.Router();
  */
 
 productRouter.route('/').post(productController.getProducts);
+productRouter.route('/best-selling').get(productController.getBestSellingProducts);
 productRouter.route('/').get(productController.getProduct);
-productRouter.route('/filters').post(productController.getFilters);
+productRouter.route('/filters').post(productController.getFiltersData);
 
 module.exports = productRouter;
