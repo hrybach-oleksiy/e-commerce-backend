@@ -106,6 +106,8 @@ const productSchema = new Schema({
   weight: Number,
   notes: { specifications: String },
   sizing: sizeSchema,
+  thumbs: [String],
+  gallery: [String],
 });
 
 module.exports = model('Product', productSchema);

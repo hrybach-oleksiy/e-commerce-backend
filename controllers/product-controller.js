@@ -29,6 +29,35 @@ class ProductController {
       next(error);
     }
   }
+
+  async getShortInfo(req, res, next) {
+    try {
+      const titlesAndColors = await productService.getShortInfo();
+      return res.json(titlesAndColors);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async addThumbnail(req, res, next) {
+    try {
+      const { id, fileContent } = req.body;
+      productService.addThumbnail(id, fileContent);
+      res.send('ok baby');
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async addImgToGallery(req, res, next) {
+    try {
+      const { fileContent, id } = req.body;
+      productService.addImgToGallery(id, fileContent);
+      res.send('ok baby');
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new ProductController();

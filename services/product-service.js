@@ -32,6 +32,7 @@ class ProductService {
       rating: 1,
       vendorCode: 1,
       discountedPrice: 1,
+      thumbs: { $slice: 1 },
     };
 
     const total = await ProductModel.countDocuments(query);
@@ -58,8 +59,30 @@ class ProductService {
     const maxPrice = Math.max(...products.map((product) => product.price));
     const rating = [...new Set(products.map((product) => product.rating))];
     const weight = [...new Set(products.map((product) => product.weight))];
-    console.log('test');
     return { categories, colors, weight, minPrice, maxPrice, rating };
+  }
+
+  async getShortInfo() {
+    const projection = {
+      title: 1,
+      color: 1,
+      vendorCode: 1,
+    };
+    const titles = await ProductModel.find({}, projection);
+    if (!titles) throw ApiError.BadRequest(`Something went wrong`);
+    return titles;
+  }
+
+  async addThumbnail(id, img) {
+    const product = await ProductModel.findById(id);
+    product.thumbs.push(img);
+    await product.save();
+  }
+
+  async addImgToGallery(id, img) {
+    const image = await ProductModel.findById(id);
+    image.gallery.push(img);
+    await image.save();
   }
 }
 

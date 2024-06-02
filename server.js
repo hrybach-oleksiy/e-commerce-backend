@@ -7,9 +7,7 @@ const router = require('./router/index');
 const errorMiddleware = require('./middlewares/error-middleware');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const ProductModel = require('./models/product-model');
 
 const PORT = process.env.PORT || 3000;
 const { DB_URL } = process.env;
@@ -45,7 +43,10 @@ const swaggerOptions = {
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
+
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+
 app.use(cookieParser());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(
