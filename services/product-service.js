@@ -51,7 +51,7 @@ class ProductService {
       rating: 1,
       vendorCode: 1,
       discountedPrice: 1,
-      thumbs: { $slice: 1 },
+      thumbs: { $arrayElemAt: ['$thumbs', 0] },
     };
 
     const pipeline = [
@@ -81,6 +81,7 @@ class ProductService {
       rating: product.rating,
       vendorCode: product.vendorCode,
       discountedPrice: product.discountedPrice,
+      thumbs: product.thumbs.length > 0 ? product.thumbs[0] : null,
     }));
 
     return { total: 4, products };
