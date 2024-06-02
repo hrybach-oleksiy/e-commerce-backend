@@ -101,7 +101,9 @@ class ProductService {
     const minPrice = Math.min(...products.map((product) => product.price));
     const maxPrice = Math.max(...products.map((product) => product.price));
     const rating = [...new Set(products.map((product) => product.rating))];
-    const weight = [...new Set(products.map((product) => product.weight))];
+    const weight = [...new Set(products.map((product) => product.weight).filter((weight) => weight !== undefined))];
+    console.log(weight);
+
     return { categories, colors, weight, minPrice, maxPrice, rating };
   }
 
