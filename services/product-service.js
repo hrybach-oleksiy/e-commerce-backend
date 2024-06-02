@@ -74,6 +74,7 @@ class ProductService {
     const shuffledProducts = topProducts.sort(() => 0.5 - Math.random());
     const selectedProducts = shuffledProducts.slice(0, 4);
     const products = selectedProducts.map((product) => ({
+      _id: product._id,
       title: product.title,
       price: product.price,
       rating: product.rating,
