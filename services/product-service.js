@@ -4,6 +4,7 @@ const ProductModel = require('../models/product-model');
 class ProductService {
   async getProducts(payload) {
     const { query: searchQuery, filters, sorts, page, pageSize } = payload;
+    console.log(filters.rating);
 
     let query = {};
 
@@ -19,6 +20,9 @@ class ProductService {
     if (filters.rating && filters.rating.length > 0) {
       query.rating = { $in: filters.rating };
     }
+    // if (filters.rating !== undefined) {
+    //   query.rating = { $gte: filters.rating };
+    // }
     if (filters.weight && filters.weight.length > 0) {
       query.weight = { $in: filters.weight };
     }
@@ -102,7 +106,6 @@ class ProductService {
     const maxPrice = Math.max(...products.map((product) => product.price));
     const rating = [...new Set(products.map((product) => product.rating))];
     const weight = [...new Set(products.map((product) => product.weight).filter((weight) => weight !== undefined))];
-    console.log(weight);
 
     return { categories, colors, weight, minPrice, maxPrice, rating };
   }
