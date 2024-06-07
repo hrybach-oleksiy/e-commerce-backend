@@ -36,7 +36,17 @@ class CartService {
 
   async getCart(payload) {
     const { userId } = payload;
-    const cart = await CartModel.findOne({ userId }).populate('items.productId');
+
+    const cart = await CartModel.findOne({ userId }).populate({
+      path: 'items.productId',
+      select: 'title price discountedPrice vendorCode thumbs',
+    });
+
+    cart.items.forEach((item) => {
+      if (item.productId.thumbs.length > 0) {
+        item.productId.thumbs = item.productId.thumbs[0];
+      }
+    });
 
     return cart;
   }
