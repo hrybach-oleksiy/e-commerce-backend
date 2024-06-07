@@ -2,19 +2,19 @@ const ApiError = require('../exceptions/api-error');
 const CartModel = require('../models/cart-model');
 class CartService {
   async addToCart(payload) {
-    const { userId, productId, quantity } = payload;
+    const { userId, productId, quantity, size } = payload;
     let cart = await CartModel.findOne({ userId });
 
     if (!cart) {
       cart = new CartModel({ userId, items: [] });
     }
 
-    const itemIndex = cart.items.findIndex((item) => item.productId.toString() === productId);
+    const itemIndex = cart.items.findIndex((item) => item.productId.toString() === productId && item.size === size);
 
     if (itemIndex > -1) {
       cart.items[itemIndex].quantity += quantity;
     } else {
-      cart.items.push({ productId, quantity });
+      cart.items.push({ productId, quantity, size });
     }
 
     await cart.save();
