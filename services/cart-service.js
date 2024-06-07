@@ -77,6 +77,7 @@ class CartService {
           'items.title': '$product.title',
           'items.vendorCode': '$product.vendorCode',
           'items.price': '$product.price',
+          'items.discountedPrice': '$product.discountedPrice',
           'items.thumbs': { $arrayElemAt: ['$product.thumbs', 0] },
           'items.quantity': '$items.quantity',
           'items.size': '$items.size',
