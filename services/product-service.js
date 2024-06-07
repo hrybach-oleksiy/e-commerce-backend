@@ -93,18 +93,50 @@ class ProductService {
     return product;
   }
 
+  // async getFiltersData() {
+  //   const products = await ProductModel.find({});
+
+  //   const categories = [...new Set(products.map((product) => product.category))];
+  //   const colors = [...new Set(products.map((product) => product.color))];
+  //   const minPrice = Math.min(...products.map((product) => product.price));
+  //   const maxPrice = Math.max(...products.map((product) => product.price));
+  //   const rating = [...new Set(products.map((product) => product.rating))];
+  //   const weight = [...new Set(products.map((product) => product.weight).filter((weight) => weight !== undefined))];
+
+  //   return { categories, colors, weight, minPrice, maxPrice, rating };
+  // }
+
   async getFiltersData() {
-    const products = await ProductModel.find({});
+    const categoriesPromise = ProductModel.distinct('category');
+    const colorsPromise = ProductModel.distinct('color');
+    const ratingPromise = ProductModel.distinct('rating');
+    const weightPromise = ProductModel.distinct('weight');
 
-    const categories = [...new Set(products.map((product) => product.category))];
-    const colors = [...new Set(products.map((product) => product.color))];
-    const minPrice = Math.min(...products.map((product) => product.price));
-    const maxPrice = Math.max(...products.map((product) => product.price));
-    const rating = [...new Set(products.map((product) => product.rating))];
-    const weight = [...new Set(products.map((product) => product.weight).filter((weight) => weight !== undefined))];
-    console.log(weight);
+    const [categories, colors, rating, weight] = await Promise.all([
+      categoriesPromise,
+      colorsPromise,
+      ratingPromise,
+      weightPromise,
+    ]);
 
-    return { categories, colors, weight, minPrice, maxPrice, rating };
+    const [minMaxPrice] = await ProductModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          minPrice: { $min: '$price' },
+          maxPrice: { $max: '$price' },
+        },
+      },
+    ]);
+
+    return {
+      categories,
+      colors,
+      weight: weight.filter((w) => w !== undefined),
+      minPrice: minMaxPrice.minPrice,
+      maxPrice: minMaxPrice.maxPrice,
+      rating,
+    };
   }
 
   async getShortInfo() {
