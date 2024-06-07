@@ -1,8 +1,7 @@
 const ApiError = require('../exceptions/api-error');
 const CartModel = require('../models/cart-model');
 const mongoose = require('mongoose');
-const { ObjectId } = require('mongodb');
-
+const calculateCartTotal = require('../utils/calculate-cart-total');
 class CartService {
   async addToCart(payload) {
     const { userId, productId, quantity, size } = payload;
@@ -92,10 +91,20 @@ class CartService {
       },
     ]);
 
+    // if (cart.length > 0) {
+    //   return cart[0];
+    // } else {
+    //   return { _id: null, userId, items: [] };
+    // }
+
     if (cart.length > 0) {
-      return cart[0];
+      const cartWithTotal = cart[0];
+      const cartTotal = await calculateCartTotal(cartWithTotal);
+      cartWithTotal.totalItems = cartTotal.totalItems;
+      cartWithTotal.totalPrice = cartTotal.totalPrice;
+      return cartWithTotal;
     } else {
-      return { _id: null, userId, items: [] };
+      return { _id: null, userId, items: [], totalItems: 0, totalPrice: 0 };
     }
   }
 }
