@@ -73,7 +73,7 @@ class CartService {
         $project: {
           _id: 1,
           userId: 1,
-          'items.productId': '$product._id',
+          'items._id': '$product._id',
           'items.title': '$product.title',
           'items.vendorCode': '$product.vendorCode',
           'items.price': '$product.price',
