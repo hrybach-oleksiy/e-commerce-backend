@@ -7,7 +7,6 @@ const router = require('./router/index');
 const errorMiddleware = require('./middlewares/error-middleware');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
-const ProductModel = require('./models/product-model');
 
 const PORT = process.env.PORT || 3000;
 const { DB_URL } = process.env;
@@ -72,7 +71,7 @@ const start = async () => {
 
     await mongoose.connect(DB_URL);
     app.listen(PORT, () => {
-      console.log(`Server starts on port ${PORT}`, mongoose.connection.name);
+      console.log(`Server starts on port ${PORT}`, `with the collection ${mongoose.connection.name}`);
     });
   } catch (error) {
     console.log(error);
