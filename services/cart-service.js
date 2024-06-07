@@ -1,6 +1,5 @@
 const ApiError = require('../exceptions/api-error');
 const CartModel = require('../models/cart-model');
-
 class CartService {
   async addToCart(payload) {
     const { userId, productId, quantity } = payload;

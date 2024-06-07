@@ -23,7 +23,7 @@ class CartController {
 
   async getCart(req, res, next) {
     try {
-      const payload = req.body;
+      const payload = req.params;
       const cart = await cartService.getCart(payload);
       return res.json(cart);
     } catch (error) {
