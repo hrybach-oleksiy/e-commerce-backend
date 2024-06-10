@@ -170,6 +170,13 @@ class ProductService {
       { $set: { description } }
     );
   }
+
+  async setShortDescription(id, shortDescription) {
+    await ProductModel.updateOne(
+      { _id: id },
+      { $set: { shortDescription } }
+    );
+  }
 }
 
 module.exports = new ProductService();

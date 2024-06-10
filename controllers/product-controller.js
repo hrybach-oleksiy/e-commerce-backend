@@ -77,6 +77,16 @@ class ProductController {
       next(error);
     }
   }
+
+  async setShortDescription(req, res, next) {
+    try {
+      const { id, shortDescription } = req.body;
+      productService.setShortDescription(id, shortDescription);
+      res.send('ok baby');
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new ProductController();
