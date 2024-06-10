@@ -118,5 +118,6 @@ productRouter.route('/short').get(productController.getShortInfo);
 productRouter.route('/thumb').post(productController.addThumbnail);
 productRouter.route('/gallery').post(productController.addImgToGallery);
 productRouter.route('/filters').post(productController.getFiltersData);
+productRouter.route('/description').post(productController.setDescription);
 
 module.exports = productRouter;

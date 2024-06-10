@@ -67,6 +67,16 @@ class ProductController {
       next(error);
     }
   }
+
+  async setDescription(req, res, next) {
+    try {
+      const { id, description } = req.body;
+      productService.setDescription(id, description);
+      res.send('ok baby');
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new ProductController();

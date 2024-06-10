@@ -151,15 +151,24 @@ class ProductService {
   }
 
   async addThumbnail(id, img) {
-    const product = await ProductModel.findById(id);
-    product.thumbs.push(img);
-    await product.save();
+    await ProductModel.updateOne(
+      { _id: id },
+      { $thumbs: { gallery: img } }
+    );
   }
 
   async addImgToGallery(id, img) {
-    const image = await ProductModel.findById(id);
-    image.gallery.push(img);
-    await image.save();
+    await ProductModel.updateOne(
+      { _id: id },
+      { $push: { gallery: img } }
+    );
+  }
+
+  async setDescription(id, description) {
+    await ProductModel.updateOne(
+      { _id: id },
+      { $set: { description } }
+    );
   }
 }
 
