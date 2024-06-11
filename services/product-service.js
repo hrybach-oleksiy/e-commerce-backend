@@ -172,6 +172,13 @@ class ProductService {
     return titles;
   }
 
+  async setTitle(id, title) {
+    await ProductModel.updateOne(
+      { _id: id },
+      { $set: { title } }
+    );
+  }
+
   async addThumbnail(id, img) {
     await ProductModel.updateOne(
       { _id: id },

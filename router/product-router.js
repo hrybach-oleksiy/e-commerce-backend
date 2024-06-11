@@ -118,9 +118,10 @@ productRouter.route('/short').get(productController.getShortInfo);
 productRouter.route('/thumb').post(productController.addThumbnail);
 productRouter.route('/gallery').post(productController.addImgToGallery);
 productRouter.route('/filters').post(productController.getFiltersData);
-productRouter.route('/description').post(productController.setDescription);
-productRouter.route('/short-description').post(productController.setShortDescription);
-productRouter.route('/color').post(productController.setColor);
+productRouter.route('/title').put(productController.setTitle);
+productRouter.route('/description').put(productController.setDescription);
+productRouter.route('/short-description').put(productController.setShortDescription);
+productRouter.route('/color').put(productController.setColor);
 productRouter.route('/rating').put(productController.setRating);
 
 module.exports = productRouter;

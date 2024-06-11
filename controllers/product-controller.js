@@ -48,6 +48,16 @@ class ProductController {
     }
   }
 
+  async setTitle(req, res, next) {
+    try {
+      const { id, title } = req.body;
+      productService.setTitle(id, title);
+      res.send('ok baby');
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async addThumbnail(req, res, next) {
     try {
       const { id, fileContent } = req.body;
