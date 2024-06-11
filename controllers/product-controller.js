@@ -89,9 +89,21 @@ class ProductController {
   }
 
   async setColor(req, res, next) {
+    console.log(req.body);
     try {
       const { id, color } = req.body;
       productService.setColor(id, color);
+      res.send('ok baby');
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async setRating(req, res, next) {
+    console.log(req.body);
+    try {
+      const { id, rating } = req.body;
+      productService.setRating(id, rating);
       res.send('ok baby');
     } catch (error) {
       next(error);

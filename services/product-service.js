@@ -206,6 +206,13 @@ class ProductService {
       { $set: { color } }
     );
   }
+
+  async setRating(id, rating) {
+    await ProductModel.updateOne(
+      { _id: id },
+      { $set: { rating } }
+    );
+  }
 }
 
 module.exports = new ProductService();

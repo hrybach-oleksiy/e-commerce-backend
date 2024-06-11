@@ -121,5 +121,6 @@ productRouter.route('/filters').post(productController.getFiltersData);
 productRouter.route('/description').post(productController.setDescription);
 productRouter.route('/short-description').post(productController.setShortDescription);
 productRouter.route('/color').post(productController.setColor);
+productRouter.route('/rating').put(productController.setRating);
 
 module.exports = productRouter;
