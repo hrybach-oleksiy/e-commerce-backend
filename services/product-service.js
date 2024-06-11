@@ -199,6 +199,13 @@ class ProductService {
       { $set: { shortDescription } }
     );
   }
+
+  async setColor(id, color) {
+    await ProductModel.updateOne(
+      { _id: id },
+      { $set: { color } }
+    );
+  }
 }
 
 module.exports = new ProductService();

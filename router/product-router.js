@@ -120,5 +120,6 @@ productRouter.route('/gallery').post(productController.addImgToGallery);
 productRouter.route('/filters').post(productController.getFiltersData);
 productRouter.route('/description').post(productController.setDescription);
 productRouter.route('/short-description').post(productController.setShortDescription);
+productRouter.route('/color').post(productController.setColor);
 
 module.exports = productRouter;

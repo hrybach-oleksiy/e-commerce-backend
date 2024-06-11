@@ -87,6 +87,16 @@ class ProductController {
       next(error);
     }
   }
+
+  async setColor(req, res, next) {
+    try {
+      const { id, color } = req.body;
+      productService.setColor(id, color);
+      res.send('ok baby');
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new ProductController();
