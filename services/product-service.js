@@ -70,19 +70,41 @@ class ProductService {
     return { total, products };
   }
 
+  // async getBestSellingProducts() {
+  //   const topProducts = await ProductModel.find({ category: 'bikes' }).sort({ rating: -1 }).limit(12).exec();
+  //   const shuffledProducts = topProducts.sort(() => 0.5 - Math.random());
+  //   const selectedProducts = shuffledProducts.slice(0, 4);
+  //   const products = selectedProducts.map((product) => ({
+  //     _id: product._id,
+  //     title: product.title,
+  //     price: product.price,
+  //     rating: product.rating,
+  //     vendorCode: product.vendorCode,
+  //     discountedPrice: product.discountedPrice,
+  //     thumbs: product.thumbs.length > 0 ? product.thumbs[0] : null,
+  //   }));
+
+  //   return { total: 4, products };
+  // }
+
   async getBestSellingProducts() {
-    const topProducts = await ProductModel.find({ category: 'bikes' }).sort({ rating: -1 }).limit(12).exec();
-    const shuffledProducts = topProducts.sort(() => 0.5 - Math.random());
-    const selectedProducts = shuffledProducts.slice(0, 4);
-    const products = selectedProducts.map((product) => ({
-      _id: product._id,
-      title: product.title,
-      price: product.price,
-      rating: product.rating,
-      vendorCode: product.vendorCode,
-      discountedPrice: product.discountedPrice,
-      thumbs: product.thumbs.length > 0 ? product.thumbs[0] : null,
-    }));
+    const products = await ProductModel.aggregate([
+      { $match: { category: 'bikes' } },
+      { $sort: { rating: -1 } },
+      { $limit: 12 },
+      { $sample: { size: 4 } },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          price: 1,
+          rating: 1,
+          vendorCode: 1,
+          discountedPrice: 1,
+          thumbs: { $arrayElemAt: ['$thumbs', 0] },
+        },
+      },
+    ]).exec();
 
     return { total: 4, products };
   }
