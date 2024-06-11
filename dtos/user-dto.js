@@ -6,6 +6,7 @@ module.exports = class UserDto {
     this.email = model.email;
     this.id = model._id;
     this.isActivated = model.isActivated;
+    this.isRoot = model.isRoot;
     this.firstName = model.firstName;
     this.lastName = model.lastName;
     this.dateOfBirth = model.dateOfBirth;
