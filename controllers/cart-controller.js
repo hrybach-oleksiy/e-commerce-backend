@@ -23,9 +23,28 @@ class CartController {
 
   async getCart(req, res, next) {
     try {
-      const payload = req.params;
+      const payload = req.body;
       const cart = await cartService.getCart(payload);
       return res.json(cart);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async createTempCart(req, res, next) {
+    try {
+      const tempCart = await cartService.createTempCart();
+      return res.json(tempCart);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async mergeCarts(req, res, next) {
+    try {
+      const { tempCartId, userId } = req.body;
+      const mergedCart = await cartService.mergeCarts(tempCartId, userId);
+      return res.json(mergedCart);
     } catch (error) {
       next(error);
     }

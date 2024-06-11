@@ -5,6 +5,8 @@ const cartRouter = express.Router();
 
 cartRouter.post('/', cartController.addToCart);
 cartRouter.delete('/', cartController.removeFromCart);
-cartRouter.get('/:userId', cartController.getCart);
+cartRouter.post('/temp-cart', cartController.createTempCart);
+cartRouter.post('/load-cart', cartController.getCart);
+cartRouter.post('/merge-cart', cartController.mergeCarts);
 
 module.exports = cartRouter;
