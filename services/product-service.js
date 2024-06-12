@@ -172,6 +172,13 @@ class ProductService {
     return titles;
   }
 
+  async setTitle(id, title) {
+    await ProductModel.updateOne(
+      { _id: id },
+      { $set: { title } }
+    );
+  }
+
   async addThumbnail(id, img) {
     await ProductModel.updateOne(
       { _id: id },
@@ -197,6 +204,20 @@ class ProductService {
     await ProductModel.updateOne(
       { _id: id },
       { $set: { shortDescription } }
+    );
+  }
+
+  async setColor(id, color) {
+    await ProductModel.updateOne(
+      { _id: id },
+      { $set: { color } }
+    );
+  }
+
+  async setRating(id, rating) {
+    await ProductModel.updateOne(
+      { _id: id },
+      { $set: { rating } }
     );
   }
 }

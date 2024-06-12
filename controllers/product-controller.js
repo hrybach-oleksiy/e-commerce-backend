@@ -48,6 +48,16 @@ class ProductController {
     }
   }
 
+  async setTitle(req, res, next) {
+    try {
+      const { id, title } = req.body;
+      productService.setTitle(id, title);
+      res.send('ok baby');
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async addThumbnail(req, res, next) {
     try {
       const { id, fileContent } = req.body;
@@ -82,6 +92,28 @@ class ProductController {
     try {
       const { id, shortDescription } = req.body;
       productService.setShortDescription(id, shortDescription);
+      res.send('ok baby');
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async setColor(req, res, next) {
+    console.log(req.body);
+    try {
+      const { id, color } = req.body;
+      productService.setColor(id, color);
+      res.send('ok baby');
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async setRating(req, res, next) {
+    console.log(req.body);
+    try {
+      const { id, rating } = req.body;
+      productService.setRating(id, rating);
       res.send('ok baby');
     } catch (error) {
       next(error);
