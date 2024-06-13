@@ -16,8 +16,8 @@ class ProductService {
     if (filters.minPrice !== undefined && filters.maxPrice !== undefined) {
       query.price = { $gte: filters.minPrice, $lte: filters.maxPrice };
     }
-    if (filters.rating && filters.rating.length > 0) {
-      query.rating = { $in: filters.rating };
+    if (filters.rating) {
+      query.rating = { $gte: filters.rating };
     }
     if (filters.weight && filters.weight.length > 0) {
       query.weight = { $in: filters.weight };
@@ -70,23 +70,6 @@ class ProductService {
     return { total, products };
   }
 
-  // async getBestSellingProducts() {
-  //   const topProducts = await ProductModel.find({ category: 'bikes' }).sort({ rating: -1 }).limit(12).exec();
-  //   const shuffledProducts = topProducts.sort(() => 0.5 - Math.random());
-  //   const selectedProducts = shuffledProducts.slice(0, 4);
-  //   const products = selectedProducts.map((product) => ({
-  //     _id: product._id,
-  //     title: product.title,
-  //     price: product.price,
-  //     rating: product.rating,
-  //     vendorCode: product.vendorCode,
-  //     discountedPrice: product.discountedPrice,
-  //     thumbs: product.thumbs.length > 0 ? product.thumbs[0] : null,
-  //   }));
-
-  //   return { total: 4, products };
-  // }
-
   async getBestSellingProducts() {
     const products = await ProductModel.aggregate([
       { $match: { category: 'bikes' } },
@@ -114,19 +97,6 @@ class ProductService {
     if (!product) throw ApiError.BadRequest(`Product with vendor code ${vendorCode} not found`);
     return product;
   }
-
-  // async getFiltersData() {
-  //   const products = await ProductModel.find({});
-
-  //   const categories = [...new Set(products.map((product) => product.category))];
-  //   const colors = [...new Set(products.map((product) => product.color))];
-  //   const minPrice = Math.min(...products.map((product) => product.price));
-  //   const maxPrice = Math.max(...products.map((product) => product.price));
-  //   const rating = [...new Set(products.map((product) => product.rating))];
-  //   const weight = [...new Set(products.map((product) => product.weight).filter((weight) => weight !== undefined))];
-
-  //   return { categories, colors, weight, minPrice, maxPrice, rating };
-  // }
 
   async getFiltersData() {
     const categoriesPromise = ProductModel.distinct('category');
@@ -173,52 +143,31 @@ class ProductService {
   }
 
   async setTitle(id, title) {
-    await ProductModel.updateOne(
-      { _id: id },
-      { $set: { title } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $set: { title } });
   }
 
   async addThumbnail(id, img) {
-    await ProductModel.updateOne(
-      { _id: id },
-      { $thumbs: { gallery: img } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $thumbs: { gallery: img } });
   }
 
   async addImgToGallery(id, img) {
-    await ProductModel.updateOne(
-      { _id: id },
-      { $push: { gallery: img } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $push: { gallery: img } });
   }
 
   async setDescription(id, description) {
-    await ProductModel.updateOne(
-      { _id: id },
-      { $set: { description } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $set: { description } });
   }
 
   async setShortDescription(id, shortDescription) {
-    await ProductModel.updateOne(
-      { _id: id },
-      { $set: { shortDescription } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $set: { shortDescription } });
   }
 
   async setColor(id, color) {
-    await ProductModel.updateOne(
-      { _id: id },
-      { $set: { color } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $set: { color } });
   }
 
   async setRating(id, rating) {
-    await ProductModel.updateOne(
-      { _id: id },
-      { $set: { rating } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $set: { rating } });
   }
 }
 
