@@ -49,6 +49,16 @@ class CartController {
       next(error);
     }
   }
+
+  async updateItemQuantity(req, res, next) {
+    try {
+      const payload = req.body;
+      const updatedCart = await cartService.updateItemQuantity(payload);
+      return res.json(updatedCart);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new CartController();

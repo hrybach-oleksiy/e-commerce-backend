@@ -145,6 +145,76 @@ class CartService {
 
     return userCart;
   }
+
+  async updateItemQuantity({ productId, userId, tempCartId, quantity }) {
+    const query = userId ? { userId } : { _id: tempCartId };
+    const cart = await CartModel.findOne(query);
+
+    if (!cart) throw new Error('Cart not found');
+
+    const item = cart.items.find((item) => item.productId.toString() === productId);
+    if (!item) throw new Error('Item not found in cart');
+
+    item.quantity += quantity;
+
+    if (item.quantity < 1) {
+      cart.items = cart.items.filter((item) => item.productId.toString() !== productId);
+    }
+
+    await cart.save();
+
+    let matchCondition;
+    if (userId) {
+      matchCondition = { userId: mongoose.Types.ObjectId.createFromHexString(userId) };
+    } else {
+      matchCondition = { _id: mongoose.Types.ObjectId.createFromHexString(tempCartId) };
+    }
+
+    const updatedCart = await CartModel.aggregate([
+      { $match: matchCondition },
+      { $unwind: '$items' },
+      {
+        $lookup: {
+          from: 'products',
+          localField: 'items.productId',
+          foreignField: '_id',
+          as: 'product',
+        },
+      },
+      { $unwind: '$product' },
+      {
+        $project: {
+          _id: 1,
+          userId: 1,
+          'items.productId': '$product._id',
+          'items.title': '$product.title',
+          'items.vendorCode': '$product.vendorCode',
+          'items.price': '$product.price',
+          'items.discountedPrice': '$product.discountedPrice',
+          'items.thumbs': { $arrayElemAt: ['$product.thumbs', 0] },
+          'items.quantity': '$items.quantity',
+          'items.size': '$items.size',
+        },
+      },
+      {
+        $group: {
+          _id: '$_id',
+          userId: { $first: '$userId' },
+          items: { $push: '$items' },
+        },
+      },
+    ]);
+
+    if (updatedCart.length > 0) {
+      const cartWithTotal = updatedCart[0];
+      const cartTotal = await calculateCartTotal(cartWithTotal);
+      cartWithTotal.totalItems = cartTotal.totalItems;
+      cartWithTotal.totalPrice = cartTotal.totalPrice;
+      return cartWithTotal;
+    } else {
+      return { _id: null, userId: userId || tempCartId, items: [], totalItems: 0, totalPrice: 0 };
+    }
+  }
 }
 
 module.exports = new CartService();
