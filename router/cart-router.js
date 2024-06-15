@@ -8,5 +8,6 @@ cartRouter.delete('/', cartController.removeFromCart);
 cartRouter.post('/temp-cart', cartController.createTempCart);
 cartRouter.post('/load-cart', cartController.getCart);
 cartRouter.post('/merge-cart', cartController.mergeCarts);
+cartRouter.post('/update-quantity', cartController.updateItemQuantity);
 
 module.exports = cartRouter;

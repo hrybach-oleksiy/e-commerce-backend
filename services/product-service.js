@@ -16,6 +16,9 @@ class ProductService {
     if (filters.minPrice !== undefined && filters.maxPrice !== undefined) {
       query.price = { $gte: filters.minPrice, $lte: filters.maxPrice };
     }
+    // if (filters.rating) {
+    //   query.rating = { $gte: filters.rating };
+    // }
     if (filters.rating && filters.rating.length > 0) {
       query.rating = { $in: filters.rating };
     }
@@ -70,23 +73,6 @@ class ProductService {
     return { total, products };
   }
 
-  // async getBestSellingProducts() {
-  //   const topProducts = await ProductModel.find({ category: 'bikes' }).sort({ rating: -1 }).limit(12).exec();
-  //   const shuffledProducts = topProducts.sort(() => 0.5 - Math.random());
-  //   const selectedProducts = shuffledProducts.slice(0, 4);
-  //   const products = selectedProducts.map((product) => ({
-  //     _id: product._id,
-  //     title: product.title,
-  //     price: product.price,
-  //     rating: product.rating,
-  //     vendorCode: product.vendorCode,
-  //     discountedPrice: product.discountedPrice,
-  //     thumbs: product.thumbs.length > 0 ? product.thumbs[0] : null,
-  //   }));
-
-  //   return { total: 4, products };
-  // }
-
   async getBestSellingProducts() {
     const products = await ProductModel.aggregate([
       { $match: { category: 'bikes' } },
@@ -114,19 +100,6 @@ class ProductService {
     if (!product) throw ApiError.BadRequest(`Product with vendor code ${vendorCode} not found`);
     return product;
   }
-
-  // async getFiltersData() {
-  //   const products = await ProductModel.find({});
-
-  //   const categories = [...new Set(products.map((product) => product.category))];
-  //   const colors = [...new Set(products.map((product) => product.color))];
-  //   const minPrice = Math.min(...products.map((product) => product.price));
-  //   const maxPrice = Math.max(...products.map((product) => product.price));
-  //   const rating = [...new Set(products.map((product) => product.rating))];
-  //   const weight = [...new Set(products.map((product) => product.weight).filter((weight) => weight !== undefined))];
-
-  //   return { categories, colors, weight, minPrice, maxPrice, rating };
-  // }
 
   async getFiltersData() {
     const categoriesPromise = ProductModel.distinct('category');
