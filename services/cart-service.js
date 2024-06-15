@@ -32,7 +32,7 @@ class CartService {
   }
 
   async removeFromCart(payload) {
-    const { userId, tempCartId, productId } = payload;
+    const { userId, tempCartId, productId, size } = payload;
 
     let cart;
 
@@ -43,7 +43,12 @@ class CartService {
     }
 
     if (cart) {
-      cart.items = cart.items.filter((item) => item.productId.toString() !== productId);
+      cart.items = cart.items.filter((item) => {
+        if (size === undefined) {
+          return item.productId.toString() !== productId;
+        }
+        return !(item.productId.toString() === productId && item.size === size);
+      });
       await cart.save();
     }
 
@@ -146,19 +151,29 @@ class CartService {
     return userCart;
   }
 
-  async updateItemQuantity({ productId, userId, tempCartId, quantity }) {
+  async updateItemQuantity({ productId, userId, tempCartId, quantity, size }) {
     const query = userId ? { userId } : { _id: tempCartId };
     const cart = await CartModel.findOne(query);
 
     if (!cart) throw new Error('Cart not found');
 
-    const item = cart.items.find((item) => item.productId.toString() === productId);
+    const item = cart.items.find((item) => {
+      if (size === undefined) {
+        return item.productId.toString() === productId;
+      }
+      return item.productId.toString() === productId && item.size === size;
+    });
     if (!item) throw new Error('Item not found in cart');
 
     item.quantity += quantity;
 
     if (item.quantity < 1) {
-      cart.items = cart.items.filter((item) => item.productId.toString() !== productId);
+      cart.items = cart.items.filter((item) => {
+        if (size === undefined) {
+          return item.productId.toString() !== productId;
+        }
+        return !(item.productId.toString() === productId && item.size === size);
+      });
     }
 
     await cart.save();
