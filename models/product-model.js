@@ -102,6 +102,7 @@ const productSchema = new Schema({
   vendorCode: {
     type: Number,
     unique: true,
+    required: true,
   },
   price: {
     type: Number,

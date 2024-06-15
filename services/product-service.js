@@ -173,6 +173,7 @@ class ProductService {
   }
 
   async setTitle(id, title) {
+    if (!title) throw ApiError.BadRequest(`title not transferred`);
     await ProductModel.updateOne(
       { _id: id },
       { $set: { title } }
@@ -180,13 +181,15 @@ class ProductService {
   }
 
   async addThumbnail(id, img) {
+    if (!img) throw ApiError.BadRequest(`image not transferred`);
     await ProductModel.updateOne(
       { _id: id },
-      { $thumbs: { gallery: img } }
+      { $push: { thumbs: img } }
     );
   }
 
   async addImgToGallery(id, img) {
+    if (!img) throw ApiError.BadRequest(`image not transferred`);
     await ProductModel.updateOne(
       { _id: id },
       { $push: { gallery: img } }
@@ -194,6 +197,7 @@ class ProductService {
   }
 
   async setDescription(id, description) {
+    if (!description) throw ApiError.BadRequest(`description not transferred`);
     await ProductModel.updateOne(
       { _id: id },
       { $set: { description } }
@@ -201,6 +205,7 @@ class ProductService {
   }
 
   async setShortDescription(id, shortDescription) {
+    if (!shortDescription) throw ApiError.BadRequest(`short description not transferred`);
     await ProductModel.updateOne(
       { _id: id },
       { $set: { shortDescription } }
@@ -208,6 +213,7 @@ class ProductService {
   }
 
   async setColor(id, color) {
+    if (!color) throw ApiError.BadRequest(`color not transferred`);
     await ProductModel.updateOne(
       { _id: id },
       { $set: { color } }
@@ -215,10 +221,57 @@ class ProductService {
   }
 
   async setRating(id, rating) {
+    if (!rating) throw ApiError.BadRequest(`rating not transferred`);
     await ProductModel.updateOne(
       { _id: id },
       { $set: { rating } }
     );
+  }
+
+  async setCategory(id, category) {
+    if (!category) throw ApiError.BadRequest(`category not transferred`);
+    await ProductModel.updateOne(
+      { _id: id },
+      { $set: { category } }
+    );
+  }
+
+  async setOverview(id, index, overview) {
+    if (index === undefined) throw ApiError.BadRequest(`index not transferred`);
+    if (!overview) throw ApiError.BadRequest(`overview not transferred`);
+    const overviewKey = `overview.${index}`;
+    await ProductModel.updateOne(
+      { _id: id },
+      { $set: { [overviewKey]: overview } }
+    );
+  }
+
+  async setPrice(id, price) {
+    if (price === undefined) throw ApiError.BadRequest(`price not transferred`);
+    await ProductModel.updateOne(
+      { _id: id },
+      { $set: { price } }
+    );
+  }
+
+  async createProduct(productData) {
+    if (!productData) throw ApiError.BadRequest(`product data not transferred`);
+    const product = new ProductModel(productData);
+    await product.save();
+  }
+
+  async deleteThumbnail(id, index) {
+    if (typeof index !== 'number') throw ApiError.BadRequest(`wrong index`);
+    const product = await ProductModel.findById(id);
+    product.thumbs.splice(index, 1);
+    await product.save();
+  }
+
+  async deleteImage(id, index) {
+    if (index === undefined) throw ApiError.BadRequest(`index not transferred`);
+    const product = await ProductModel.findById(id);
+    product.gallery.splice(index, 1);
+    await product.save();
   }
 }
 
