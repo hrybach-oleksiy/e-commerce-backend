@@ -1,4 +1,3 @@
-const ApiError = require('../exceptions/api-error');
 const CartModel = require('../models/cart-model');
 const mongoose = require('mongoose');
 const calculateCartTotal = require('../utils/calculate-cart-total');
@@ -27,8 +26,7 @@ class CartService {
     }
 
     await cart.save();
-
-    return cart;
+    return this.getCart({ userId, tempCartId });
   }
 
   async removeFromCart(payload) {
@@ -52,7 +50,7 @@ class CartService {
       await cart.save();
     }
 
-    return cart;
+    return this.getCart({ userId, tempCartId });
   }
 
   async getCart(payload) {
@@ -177,58 +175,7 @@ class CartService {
     }
 
     await cart.save();
-
-    let matchCondition;
-    if (userId) {
-      matchCondition = { userId: mongoose.Types.ObjectId.createFromHexString(userId) };
-    } else {
-      matchCondition = { _id: mongoose.Types.ObjectId.createFromHexString(tempCartId) };
-    }
-
-    const updatedCart = await CartModel.aggregate([
-      { $match: matchCondition },
-      { $unwind: '$items' },
-      {
-        $lookup: {
-          from: 'products',
-          localField: 'items.productId',
-          foreignField: '_id',
-          as: 'product',
-        },
-      },
-      { $unwind: '$product' },
-      {
-        $project: {
-          _id: 1,
-          userId: 1,
-          'items.productId': '$product._id',
-          'items.title': '$product.title',
-          'items.vendorCode': '$product.vendorCode',
-          'items.price': '$product.price',
-          'items.discountedPrice': '$product.discountedPrice',
-          'items.thumbs': { $arrayElemAt: ['$product.thumbs', 0] },
-          'items.quantity': '$items.quantity',
-          'items.size': '$items.size',
-        },
-      },
-      {
-        $group: {
-          _id: '$_id',
-          userId: { $first: '$userId' },
-          items: { $push: '$items' },
-        },
-      },
-    ]);
-
-    if (updatedCart.length > 0) {
-      const cartWithTotal = updatedCart[0];
-      const cartTotal = await calculateCartTotal(cartWithTotal);
-      cartWithTotal.totalItems = cartTotal.totalItems;
-      cartWithTotal.totalPrice = cartTotal.totalPrice;
-      return cartWithTotal;
-    } else {
-      return { _id: null, userId: userId || tempCartId, items: [], totalItems: 0, totalPrice: 0 };
-    }
+    return this.getCart({ userId, tempCartId });
   }
 }
 
