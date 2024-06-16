@@ -1,4 +1,4 @@
-  /products:
+  products:
     get:
       summary: Get product.
       tags: [Products]

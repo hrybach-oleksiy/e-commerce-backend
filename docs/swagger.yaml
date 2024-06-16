@@ -17,13 +17,43 @@ tags:
   - name: Countries
     description: Operations related to countries
 paths:
-  /products:
-    $ref: './paths/products.yaml'
-  /countries:
-    $ref: './paths/countries.yaml'
-components:
-  schemas:
-    Product:
-      $ref: './components/schemas.yaml#/Product'
-    Country:
-      $ref: './components/schemas.yaml#/Country'
+  /ping:
+    get:
+      responses:
+        '200':
+          description: OK
+  /countries: 
+    get:
+      summary: Get the list of all countries.
+      tags: [Countries]
+      description: Get the list of all countries.
+      responses:
+        200:
+          description: Successful retrieval of the list of the countries.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: './components/schemas.yaml#/Country'
+        400:
+          description: Bad Request.
+        5XX:
+          description: Unexpected error
+  # /countries:
+  #   $ref: 'countries.yaml'
+# components:
+#   schemas:
+#     Product:
+#       $ref: './components/schemas.yaml#/Product'
+#     Country:
+#       $ref: './schemas.yaml#/Country'
+# components:
+#   schemas:
+#     Country:
+#       type: object
+#       properties:
+#         name:
+#           type: string
+#         code:
+#           type: string
