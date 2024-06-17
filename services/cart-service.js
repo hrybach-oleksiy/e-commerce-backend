@@ -117,9 +117,10 @@ class CartService {
 
     if (cart.length > 0) {
       const cartWithTotal = cart[0];
-      const cartTotal = await calculateCartTotal(cartWithTotal);
+      const cartTotal = calculateCartTotal(cartWithTotal);
       cartWithTotal.totalItems = cartTotal.totalItems;
       cartWithTotal.totalPrice = cartTotal.totalPrice;
+      cartWithTotal.totalDiscount = cartTotal.totalDiscount;
       return cartWithTotal;
     } else {
       return { _id: null, userId: userId || tempCartId, items: [], totalItems: 0, totalPrice: 0 };
