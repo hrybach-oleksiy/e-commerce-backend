@@ -21,6 +21,15 @@ class CartController {
     }
   }
 
+  async clearCart(req, res, next) {
+    try {
+      const cart = await cartService.clearCart(req.body);
+      return res.json(cart);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getCart(req, res, next) {
     try {
       const payload = req.body;
