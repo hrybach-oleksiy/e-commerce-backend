@@ -53,6 +53,21 @@ class CartService {
     return this.getCart({ userId, tempCartId });
   }
 
+  async clearCart(payload) {
+    const { userId, tempCartId } = payload;
+    let cart;
+    if (userId) {
+      cart = await CartModel.findOne({ userId });
+    } else if (tempCartId) {
+      cart = await CartModel.findById(tempCartId);
+    }
+    if (cart) {
+      cart.items = [];
+      await cart.save();
+    }
+    return this.getCart({ userId, tempCartId });
+  }
+
   async getCart(payload) {
     const { userId, tempCartId } = payload;
 
@@ -102,9 +117,10 @@ class CartService {
 
     if (cart.length > 0) {
       const cartWithTotal = cart[0];
-      const cartTotal = await calculateCartTotal(cartWithTotal);
+      const cartTotal = calculateCartTotal(cartWithTotal);
       cartWithTotal.totalItems = cartTotal.totalItems;
       cartWithTotal.totalPrice = cartTotal.totalPrice;
+      cartWithTotal.totalDiscount = cartTotal.totalDiscount;
       return cartWithTotal;
     } else {
       return { _id: null, userId: userId || tempCartId, items: [], totalItems: 0, totalPrice: 0 };
@@ -128,7 +144,7 @@ class CartService {
     if (!userCart) {
       tempCart.userId = userId;
       await tempCart.save();
-      return tempCart;
+      return this.getCart({ userId });
     }
 
     for (let tempItem of tempCart.items) {
@@ -146,7 +162,7 @@ class CartService {
     await userCart.save();
     await CartModel.findByIdAndDelete(tempCartId);
 
-    return userCart;
+    return this.getCart({ userId });
   }
 
   async updateItemQuantity({ productId, userId, tempCartId, quantity, size }) {
