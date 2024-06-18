@@ -10,5 +10,7 @@ cartRouter.post('/temp-cart', cartController.createTempCart);
 cartRouter.post('/load-cart', cartController.getCart);
 cartRouter.post('/merge-cart', cartController.mergeCarts);
 cartRouter.post('/update-quantity', cartController.updateItemQuantity);
+cartRouter.post('/promo-apply', cartController.applyPromo);
+cartRouter.post('/promo-remove', cartController.removePromo);
 
 module.exports = cartRouter;

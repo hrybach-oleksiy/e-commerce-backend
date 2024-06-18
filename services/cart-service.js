@@ -1,18 +1,16 @@
-const CartModel = require('../models/cart-model');
 const mongoose = require('mongoose');
+const CartModel = require('../models/cart-model');
 const calculateCartTotal = require('../utils/calculate-cart-total');
+const promoService = require('./promo-service');
+
 class CartService {
+  constructor(promoService) {
+    this.promoService = promoService;
+  }
+
   async addToCart(payload) {
     const { userId, productId, quantity, size, tempCartId } = payload;
-
-    let cart;
-
-    if (userId) {
-      cart = await CartModel.findOne({ userId });
-    } else if (tempCartId) {
-      cart = await CartModel.findById(tempCartId);
-    }
-
+    const cart = await this.getCart({ userId, tempCartId });
     if (!cart) {
       cart = new CartModel({ userId, items: [] });
     }
@@ -26,20 +24,12 @@ class CartService {
     }
 
     await cart.save();
-    return this.getCart({ userId, tempCartId });
+    return this.getCartWithProducts({ userId, tempCartId });
   }
 
   async removeFromCart(payload) {
     const { userId, tempCartId, productId, size } = payload;
-
-    let cart;
-
-    if (userId) {
-      cart = await CartModel.findOne({ userId });
-    } else if (tempCartId) {
-      cart = await CartModel.findById(tempCartId);
-    }
-
+    const cart = await this.getCart({ userId, tempCartId });
     if (cart) {
       cart.items = cart.items.filter((item) => {
         if (size === undefined) {
@@ -50,25 +40,21 @@ class CartService {
       await cart.save();
     }
 
-    return this.getCart({ userId, tempCartId });
+    return this.getCartWithProducts({ userId, tempCartId });
   }
 
   async clearCart(payload) {
     const { userId, tempCartId } = payload;
-    let cart;
-    if (userId) {
-      cart = await CartModel.findOne({ userId });
-    } else if (tempCartId) {
-      cart = await CartModel.findById(tempCartId);
-    }
+    const cart = await this.getCart({ userId, tempCartId });
     if (cart) {
       cart.items = [];
+      cart.promo = undefined;
       await cart.save();
     }
-    return this.getCart({ userId, tempCartId });
+    return this.getCartWithProducts({ userId, tempCartId });
   }
 
-  async getCart(payload) {
+  async getCartWithProducts(payload) {
     const { userId, tempCartId } = payload;
 
     let matchCondition;
@@ -96,6 +82,7 @@ class CartService {
         $project: {
           _id: 1,
           userId: 1,
+          promo: 1,
           'items.productId': '$product._id',
           'items.title': '$product.title',
           'items.vendorCode': '$product.vendorCode',
@@ -110,6 +97,7 @@ class CartService {
         $group: {
           _id: '$_id',
           userId: { $first: '$userId' },
+          promo: { $first: '$promo' },
           items: { $push: '$items' },
         },
       },
@@ -121,6 +109,7 @@ class CartService {
       cartWithTotal.totalItems = cartTotal.totalItems;
       cartWithTotal.totalPrice = cartTotal.totalPrice;
       cartWithTotal.totalDiscount = cartTotal.totalDiscount;
+      cartWithTotal.totalPromoDiscount = cartTotal.totalPromoDiscount;
       return cartWithTotal;
     } else {
       return { _id: null, userId: userId || tempCartId, items: [], totalItems: 0, totalPrice: 0 };
@@ -144,7 +133,7 @@ class CartService {
     if (!userCart) {
       tempCart.userId = userId;
       await tempCart.save();
-      return this.getCart({ userId });
+      return this.getCartWithProducts({ userId });
     }
 
     for (let tempItem of tempCart.items) {
@@ -162,13 +151,11 @@ class CartService {
     await userCart.save();
     await CartModel.findByIdAndDelete(tempCartId);
 
-    return this.getCart({ userId });
+    return this.getCartWithProducts({ userId });
   }
 
   async updateItemQuantity({ productId, userId, tempCartId, quantity, size }) {
-    const query = userId ? { userId } : { _id: tempCartId };
-    const cart = await CartModel.findOne(query);
-
+    const cart = await this.getCart({ userId, tempCartId });
     if (!cart) throw new Error('Cart not found');
 
     const item = cart.items.find((item) => {
@@ -191,8 +178,41 @@ class CartService {
     }
 
     await cart.save();
-    return this.getCart({ userId, tempCartId });
+    return this.getCartWithProducts({ userId, tempCartId });
+  }
+
+  async applyPromo({ userId, tempCartId, promoCodeId }) {
+    const cart = await this.getCart({ userId, tempCartId });
+    if (!cart) {
+      throw new Error('Cart not found');
+    }
+    const promos = await this.promoService.listPromos();
+    const promo = promos.find((promo) => promo._id.toString() === promoCodeId);
+    if (!promo) {
+      throw new Error('Unknown promo code');
+    }
+    cart.promo = promo;
+    await cart.save();
+    return this.getCartWithProducts({ userId, tempCartId });
+  }
+
+  async removePromo({ userId, tempCartId }) {
+    const cart = await this.getCart({ userId, tempCartId });
+    if (!cart) {
+      throw new Error('Cart not found');
+    }
+    cart.promo = undefined;
+    await cart.save();
+    return this.getCartWithProducts({ userId, tempCartId });
+  }
+
+  getCart({ userId, tempCartId }) {
+    if (!userId && !tempCartId) return;
+    if (userId) {
+      return CartModel.findOne({ userId });
+    }
+    return CartModel.findById(tempCartId);
   }
 }
 
-module.exports = new CartService();
+module.exports = new CartService(promoService);
