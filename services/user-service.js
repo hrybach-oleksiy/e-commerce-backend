@@ -8,7 +8,7 @@ const AddressDto = require('../dtos/address-dto');
 const mailService = require('./mail-service');
 const ApiError = require('../exceptions/api-error');
 
-const errDublicateKey = 11000;
+const errDuplicateKey = 11000;
 const saltRounds = 10;
 
 class UserService {
@@ -107,6 +107,20 @@ class UserService {
     return { ...tokens, user: userDto };
   }
 
+  async isRoot(refreshToken) {
+    if (!refreshToken) {
+      throw ApiError.UnauthorizedError();
+    }
+    const userData = tokenService.validateRefreshToken(refreshToken);
+    const tokenFromDb = await tokenService.findToken(refreshToken);
+
+    if (!userData || !tokenFromDb) {
+      throw ApiError.UnauthorizedError();
+    }
+    const user = await UserModel.findById(userData.sub);
+    return user.isRoot;
+  }
+
   async update(userID, arg) {
     const user = await UserModel.findById(userID);
     if (!user) {
@@ -127,7 +141,7 @@ class UserService {
     try {
       await UserModel.findOneAndUpdate({ _id: userID }, arg);
     } catch (error) {
-      if (error.code === errDublicateKey) {
+      if (error.code === errDuplicateKey) {
         throw ApiError.BadRequest('User with such email already exists.');
       }
       throw error;
