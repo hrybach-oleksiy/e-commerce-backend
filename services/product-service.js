@@ -19,12 +19,12 @@ class ProductService {
     if (filters.rating && filters.rating.length > 0) {
       query.rating = { $in: filters.rating };
     }
-    // if (filters.rating) {
-    //   query.rating = { $gte: filters.rating };
-    // }
-    if (filters.weight && filters.weight.length > 0) {
-      query.weight = { $in: filters.weight };
+    if (filters.rating) {
+      query.rating = { $gte: filters.rating };
     }
+    // if (filters.weight && filters.weight.length > 0) {
+    //   query.weight = { $in: filters.weight };
+    // }
     if (searchQuery && searchQuery.trim().length > 0) {
       query.title = { $regex: searchQuery, $options: 'i' };
     }
