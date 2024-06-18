@@ -16,9 +16,12 @@ class ProductService {
     if (filters.minPrice !== undefined && filters.maxPrice !== undefined) {
       query.price = { $gte: filters.minPrice, $lte: filters.maxPrice };
     }
-    if (filters.rating) {
-      query.rating = { $gte: filters.rating };
+    if (filters.rating && filters.rating.length > 0) {
+      query.rating = { $in: filters.rating };
     }
+    // if (filters.rating) {
+    //   query.rating = { $gte: filters.rating };
+    // }
     if (filters.weight && filters.weight.length > 0) {
       query.weight = { $in: filters.weight };
     }
