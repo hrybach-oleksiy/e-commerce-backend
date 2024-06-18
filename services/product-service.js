@@ -16,8 +16,8 @@ class ProductService {
     if (filters.minPrice !== undefined && filters.maxPrice !== undefined) {
       query.price = { $gte: filters.minPrice, $lte: filters.maxPrice };
     }
-    if (filters.rating && filters.rating.length > 0) {
-      query.rating = { $in: filters.rating };
+    if (filters.rating) {
+      query.rating = { $gte: filters.rating };
     }
     if (filters.weight && filters.weight.length > 0) {
       query.weight = { $in: filters.weight };
@@ -213,84 +213,54 @@ class ProductService {
 
   async setTitle(id, title) {
     if (!title) throw ApiError.BadRequest(`title not transferred`);
-    await ProductModel.updateOne(
-      { _id: id },
-      { $set: { title } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $set: { title } });
   }
 
   async addThumbnail(id, img) {
     if (!img) throw ApiError.BadRequest(`image not transferred`);
-    await ProductModel.updateOne(
-      { _id: id },
-      { $push: { thumbs: img } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $push: { thumbs: img } });
   }
 
   async addImgToGallery(id, img) {
     if (!img) throw ApiError.BadRequest(`image not transferred`);
-    await ProductModel.updateOne(
-      { _id: id },
-      { $push: { gallery: img } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $push: { gallery: img } });
   }
 
   async setDescription(id, description) {
     if (!description) throw ApiError.BadRequest(`description not transferred`);
-    await ProductModel.updateOne(
-      { _id: id },
-      { $set: { description } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $set: { description } });
   }
 
   async setShortDescription(id, shortDescription) {
     if (!shortDescription) throw ApiError.BadRequest(`short description not transferred`);
-    await ProductModel.updateOne(
-      { _id: id },
-      { $set: { shortDescription } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $set: { shortDescription } });
   }
 
   async setColor(id, color) {
     if (!color) throw ApiError.BadRequest(`color not transferred`);
-    await ProductModel.updateOne(
-      { _id: id },
-      { $set: { color } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $set: { color } });
   }
 
   async setRating(id, rating) {
     if (!rating) throw ApiError.BadRequest(`rating not transferred`);
-    await ProductModel.updateOne(
-      { _id: id },
-      { $set: { rating } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $set: { rating } });
   }
 
   async setCategory(id, category) {
     if (!category) throw ApiError.BadRequest(`category not transferred`);
-    await ProductModel.updateOne(
-      { _id: id },
-      { $set: { category } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $set: { category } });
   }
 
   async setOverview(id, index, overview) {
     if (index === undefined) throw ApiError.BadRequest(`index not transferred`);
     if (!overview) throw ApiError.BadRequest(`overview not transferred`);
     const overviewKey = `overview.${index}`;
-    await ProductModel.updateOne(
-      { _id: id },
-      { $set: { [overviewKey]: overview } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $set: { [overviewKey]: overview } });
   }
 
   async setPrice(id, price) {
     if (price === undefined) throw ApiError.BadRequest(`price not transferred`);
-    await ProductModel.updateOne(
-      { _id: id },
-      { $set: { price } }
-    );
+    await ProductModel.updateOne({ _id: id }, { $set: { price } });
   }
 
   async createProduct(productData) {
