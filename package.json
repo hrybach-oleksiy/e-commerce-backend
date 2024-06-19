@@ -5,29 +5,20 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
-    "dev": "nodemon --exec ts-node src/server/server.ts",
-    "build": "cross-env NODE_ENV=production webpack --mode production",
     "format": "npx prettier --write .",
-    "ci:format": "prettier --check .",
-    "lint": "eslint ./src",
-    "lint:fix": "eslint --fix ./src"
+    "ci:format": "prettier --check ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "axios": "^1.6.8",
     "cross-env": "^7.0.3",
-    "eslint": "^8.2.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-import": "^2.25.2",
-    "eslint-plugin-prettier": "^5.0.1",
     "nodemon": "^3.1.0",
     "prettier": "3.0.3"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "big.js": "^6.2.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -36,7 +27,6 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.5.0",
     "mongoose": "^8.3.2",
-    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.13",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",

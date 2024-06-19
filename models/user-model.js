@@ -23,6 +23,10 @@ const userSchema = new Schema({
     required: true,
     trim: true,
   },
+  isRoot: {
+    type: Boolean,
+    default: false,
+  },
   dateOfBirth: {
     type: Date,
     required: true,
