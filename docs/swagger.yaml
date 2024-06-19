@@ -326,6 +326,203 @@ paths:
           description: Forbidden
         5XX:
           description: Unexpected error
+  /products:
+    get:
+      summary: Get product
+      tags: [Products]
+      description: Get product by vendor code
+      parameters:
+        - in: query
+          name: vc
+          schema:
+            type: number
+          required: true
+          description: The vendor code of the product.
+          example: 671296
+      responses:
+        200:
+          description: Successful retrieval of the product.
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/Product'
+    post:
+      summary: Fetch products
+      tags: [Products]
+      description: Get products by filters
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  description: category of products (bikes or accessories)
+                  example: bikes
+                minPrice:
+                  type: number
+                  description: Minimum price value of range ($)
+                  example: 100
+                maxPrice:
+                  type: number
+                  description: Maximum price value of range ($)
+                  example: 2000
+                weight:
+                  type: number
+                  description: Maximum rider weight (100 - 130 kg (step 15))
+                  example: 115
+                # minBase:
+                #   type: number
+                #   description: Minimum bike wheel base of range (mm)
+                #   example: 1000
+                # maxBase:
+                #   type: number
+                #   description: Maximum bike wheel base of range (mm)
+                #   example: 1100
+                # frameSize:
+                #   type: number
+                #   description: Frame bike size (mm)
+                #   example: 450
+      responses:
+        200:
+          description: Successful retrieval of the list of the products.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    title:
+                      type: string
+                      description: Product title
+                      example: City Step-Through 26" 3-Speed Yellow
+                    price:
+                      type: number
+                      description: Product title
+                      example: 699.99
+                    rating:
+                      type: number
+                      description: Product rating from 0 to 5 (step 0.5)
+                      example: 4.5
+                    vendorCode:
+                      type: number
+                      description: Product code
+                      example: 671296
+                    discountedRouter:
+                      type: number
+                      description: Discounted price ($)
+                      example: 559.99
+        400:
+          description: Bad Request.
+        5XX:
+          description: Unexpected error
+  /products/best-selling:
+    get:
+      summary: Best Selling Bikes
+      tags: [Products]
+      description: Get the list of best selling bikes
+      responses:
+        200:
+          description: Successful retrieval of the list of the product
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items: 
+                      type: object
+                      properties:
+                        discountedPrice: 
+                          type: number
+                          description: Discounted price of the product
+                          example: 599.99
+                        price:
+                          type: number
+                          description: The price of the product
+                          example: 1899.99
+                        rating:
+                          type: number
+                          description: The rating  of the product
+                          example: 4.5
+                        thumbs:
+                          type: string
+                          description: The thumbnail of the product in Base64 format
+                          example: iVBORw0KGgoAAAANSUhEUgAAAgAAAAEgCAMAAAD14jtjAAADA
+                        title:
+                          type: string
+                          description: The name of the product
+                          example: Agree Race
+                        vendorCode:
+                          type: number
+                          description: Vendor code of the product
+                          example: 670963
+                        _id: 
+                          type: string
+                          description: Identifier received from the server.
+                          example: 66508c3b61e9629b1d543d6a
+                  total:
+                    type: number
+                    description: Total amount of the items
+                    example: 4
+        5XX:
+          description: Unexpected error
+  /products/filters:
+     get:
+      summary: Filter Categories
+      tags: [Products]
+      description: Get the list of possible filter categories
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  categories:
+                    type: array
+                    items:
+                      type: string
+                    example: ["accessory", "bikes"]
+                    description: List of product categories
+                  colors:
+                    type: array
+                    items:
+                      type: string
+                    example: ["Aquamarine", "Black", "Blue", "Galactic", "Green", "Grey", "Olive", "Orange", "Purple", "Red", "Sienna", "Silver", "White", "Yellow"]
+                    description: List of available product colors
+                  weight:
+                    type: array
+                    items:
+                      type: number
+                      format: float
+                    example: [100, 115, 130]
+                    description: List of maximum weights of the rider (in kg)
+                  minPrice:
+                    type: number
+                    format: float
+                    example: 74.99
+                    description: Minimum product price
+                  maxPrice:
+                    type: number
+                    format: float
+                    example: 1899.99
+                    description: Maximum product price
+                  rating:
+                    type: array
+                    items:
+                      type: number
+                      format: float
+                    example: [3, 3.5, 4, 4.5, 5]
+                    description: List of possible product ratings
+        400:
+          description: Bad Request
+        5XX:
+          description: Unexpected error
 components:
   schemas:
     Country:
@@ -425,3 +622,242 @@ components:
           - postalCode
           - country
           - isDefault
+    Product:
+      type: object
+      properties:
+        category:
+          type: string
+          description: The category of the product.
+          example: "bikes"
+          # unique: true
+        title:
+          type: string
+          description: The title of the product.
+          example: "Mountain Bike"
+          # required: true
+          # unique: true
+          # trim: true
+        description:
+          type: string
+          description: The description of the product.
+          example: "A high-quality mountain bike suitable for all terrains."
+          # trim: true
+        vendorCode:
+          type: number
+          description: The vendor code of the product.
+          example: 123456
+          # unique: true
+        price:
+          type: number
+          format: decimal
+          description: The price of the product.
+          example: 999.99
+          # required: true
+        discounted price:
+          type: number
+          format: decimal
+          description: The price of the product with discount.
+          example: 599.99
+          # required: true
+        color:
+          type: string
+          description: The color of the product.
+          example: "Red"
+        rating:
+          type: number
+          format: decimal
+          description: The rating of the product (from 0 to 5 in increments of 0.5).
+          example: 3.5
+        overview:
+          type: array
+          items:
+            type: string
+          description: A brief overview of the product.
+          example: ["Durable frame", "Hydraulic brakes"]
+        specs:
+          $ref: '#/components/schemas/Specs'
+        weight:
+          type: number
+          description: The weight limit of the bike (100/115/130kg).
+          example: 100
+        notes:
+          type: object
+          properties:
+            Specifications:
+              type: string
+              description: Additional specifications of the product.
+              example: "This bike meets all safety standards."
+        sizing:
+          $ref: '#/components/schemas/Size'
+    Size:
+        type: object
+        properties:
+          seatTube:
+            type: number
+            description: The length of the seat tube measured from the center to the top.
+            example: 440
+          topTube Horizontal:
+            type: number
+            description: The effective length of the top tube.
+            example: 535
+          headAngle:
+            type: number
+            format: decimal
+            description: The angle of the head tube.
+            example: 73.5
+          seatAngle:
+            type: number
+            format: decimal
+            description: The angle of the seat tube.
+            example: 74.0
+          chainstays:
+            type: number
+            description: The length of the chainstay.
+            example: 455
+          bbHeightToHub:
+            type: number
+            description: The bottom bracket drop.
+            example: 70
+          wheelBase:
+            type: number
+            description: The total wheelbase of the bike.
+            example: 1070
+          headTube:
+            type: number
+            description: The length of the head tube.
+            example: 90
+          reach:
+            type: number
+            description: The sit-bone to centre-of-handlebar measurement.
+            example: 402
+          stack:
+            type: number
+            description: The vertical distance from the center of the bottom bracket to the virtual horizontal line from the top of the head tube.
+            example: 615
+    Specs:
+        type: object
+        properties:
+          frameset:
+            type: object
+            properties:
+              frame:
+                type: string
+                description: Frame of the bike.
+                example: "Aluminum"
+              fork:
+                type: string
+                description: Fork of the bike.
+                example: "Carbon"
+          drivetrain:
+            type: object
+            properties:
+              crankSet:
+                type: string
+                description: Crank set of the bike.
+                example: "Shimano Ultegra"
+              chainwheel:
+                type: string
+                description: Chainwheel of the bike.
+                example: "Shimano"
+              bottomBracket:
+                type: string
+                description: Bottom bracket of the bike.
+                example: "Shimano Hollowtech II"
+              sprocket:
+                type: string
+                description: Sprocket of the bike.
+                example: "Shimano"
+              freewheel:
+                type: string
+                description: Freewheel of the bike.
+                example: "Shimano"
+              rearShifter:
+                type: string
+                description: Rear shifter of the bike.
+                example: "Shimano Ultegra"
+              chain:
+                type: string
+                description: Chain of the bike.
+                example: "Shimano Ultegra"
+              pedals:
+                type: string
+                description: Pedals of the bike.
+                example: "Shimano PD-R550"
+          brakes:
+            type: object
+            properties:
+              frontBrake:
+                type: string
+                description: Front brake of the bike.
+                example: "Shimano Ultegra"
+              rearBrake:
+                type: string
+                description: Rear brake of the bike.
+                example: "Shimano Ultegra"
+              brakeLever:
+                type: string
+                description: Brake lever of the bike.
+                example: "Shimano Ultegra"
+          components:
+            type: object
+            properties:
+              handlebar:
+                type: string
+                description: Handlebar of the bike.
+                example: "Zipp SL-70"
+              stem:
+                type: string
+                description: Stem of the bike.
+                example: "Zipp Service Course"
+              grips:
+                type: string
+                description: Grips of the bike.
+                example: "Lizard Skins"
+              saddle:
+                type: string
+                description: Saddle of the bike.
+                example: "Fizik Arione"
+              seatPost:
+                type: string
+                description: Seat post of the bike.
+                example: "Zipp Service Course"
+              seatClamp:
+                type: string
+                description: Seat clamp of the bike.
+                example: "Integrated"
+          wheels:
+            type: object
+            properties:
+              frontWheel:
+                type: string
+                description: Front wheel of the bike.
+                example: "Zipp 404"
+              rearWheel:
+                type: string
+                description: Rear wheel of the bike.
+                example: "Zipp 404"
+              frontHub:
+                type: string
+                description: Front hub of the bike.
+                example: "Zipp"
+              rearHub:
+                type: string
+                description: Rear hub of the bike.
+                example: "Zipp"
+              spokes:
+                type: string
+                description: Spokes of the bike.
+                example: "Sapim CX-Ray"
+              rims:
+                type: string
+                description: Rims of the bike.
+                example: "Zipp 404"
+              tires:
+                type: string
+                description: Tires of the bike.
+                example: "Continental GP4000S II"
+              tubes:
+                type: string
+                description: Tubes of the bike.
+                example: "Continental"
+            
