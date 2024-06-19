@@ -18,6 +18,8 @@ tags:
     description: Operations related to countries
   - name: Users
     description: Operations related to users
+  - name: Cart
+    description: Operations with product's cart  
 paths:
   /countries:
     get:
@@ -516,6 +518,342 @@ paths:
           description: Bad Request
         5XX:
           description: Unexpected error
+  /cart:
+    post:
+      summary: Add a product to the cart
+      tags: [Cart]
+      description: This endpoint adds a product to the user's cart and returns the updated cart information.
+      requestBody:
+        description: Details of the product to be added to the cart.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId:
+                  type: string
+                  example: "66508c3b61e9629b1d543d67"
+                  description: Unique identifier for the product
+                quantity:
+                  type: integer
+                  example: 1
+                  description: Quantity of the product to add
+                size:
+                  type: string
+                  example: "M"
+                  description: Size of the product
+                tempCartId:
+                  type: string
+                  example: "6671a431894a89bbbc3a77fc"
+                  description: Temporary cart identifier
+                userId:
+                  type: string
+                  example: "664ca87e87c2f53b2e48b30a"
+                  description: Unique identifier for the user
+      responses:
+        200:
+          description: Successful response with updated cart information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart' 
+        400:
+          description: Bad Request
+        5XX:
+          description: Unexpected error                   
+    delete:
+      summary: Delete a product from the cart
+      tags: [Cart]
+      description: This endpoint deletes a product from the user's cart and returns the updated cart information.
+      requestBody:
+        description: Details of the product to be added to the cart.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId:
+                  type: string
+                  example: "66508c3b61e9629b1d543d67"
+                  description: Unique identifier for the product
+                quantity:
+                  type: integer
+                  example: 1
+                  description: Quantity of the product to add
+                size:
+                  type: string
+                  example: "M"
+                  description: Size of the product
+                tempCartId:
+                  type: string
+                  example: "6671a431894a89bbbc3a77fc"
+                  description: Temporary cart identifier
+                userId:
+                  type: string
+                  example: "664ca87e87c2f53b2e48b30a"
+                  description: Unique identifier for the user
+      responses:
+        200:
+          description: Successful response with updated cart information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart' 
+        400:
+          description: Bad Request
+        5XX:
+          description: Unexpected error                   
+  /cart/clear:
+    post:
+      summary: Clear the user's cart
+      description: Removes all items from the user's cart based on temporary cart ID and user ID.
+      tags: [Cart]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tempCartId
+                - userId
+              properties:
+                tempCartId:
+                  type: string
+                  example: "6671a431894a89bbbc3a77fc"
+                  description: Temporary cart identifier
+                userId:
+                  type: string
+                  example: "664ca87e87c2f53b2e48b30a"
+                  description: Unique identifier for the user
+      responses:
+        200:
+          description: Successful response with cleared cart
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    nullable: true
+                    example: null
+                    description: Unique identifier for the cart
+                  userId:
+                    type: string
+                    example: "664ca87e87c2f53b2e48b30a"
+                    description: Unique identifier for the user
+                  items:
+                    type: array
+                    items: {}
+                    example: []
+                    description: Empty array, as no items are present in the cart
+                  totalItems:
+                    type: integer
+                    example: 0
+                    description: Total number of items in the cart after clearing
+                  totalPrice:
+                    type: number
+                    format: float
+                    example: 0
+                    description: Total price of items in the cart after clearing
+        400:
+          description: Bad Request
+        5XX:
+          description: Unexpected error   
+  /cart/temp-cart:
+    post:
+      summary: Create a temporary cart
+      description: Creates a temporary cart on the server.
+      tags: [Cart]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          description: Successful response with a temporary cart
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    example: "66733dc4cbda3c8399b873ed"
+                    description: Unique identifier for the temporary cart
+                  items:
+                    type: array
+                    items: {}
+                    example: []
+                    description: Empty array, indicating no items in the temporary cart
+        400:
+          description: Bad Request
+        5XX:
+          description: Unexpected error   
+  /cart/load-cart:
+    post:
+      summary: Load user's or temporary cart
+      description: Retrieves the user's or temporary cart based on either userId or tempCartId provided.
+      tags: [Cart]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  example: "664ca87e87c2f53b2e48b30a"
+                  description: Unique identifier for the user
+                tempCartId:
+                  type: string
+                  example: "6671a431894a89bbbc3a77fc"
+                  description: Temporary cart identifier
+      responses:
+        200:
+          description: Successful response with the user's or temporary cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart' 
+        400:
+          description: Bad Request
+        5XX:
+          description: Unexpected error               
+  /cart/merge-cart:
+    post:
+      summary: Merge temporary cart with user's cart
+      description: Merges the items from a temporary cart into the user's cart based on tempCartId and userId provided.
+      tags: [Cart]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tempCartId:
+                  type: string
+                  example: "66733dc4cbda3c8399b873ed"
+                  description: Temporary cart identifier
+                userId:
+                  type: string
+                  example: "664ca87e87c2f53b2e48b30a"
+                  description: Unique identifier for the user
+      responses:
+        200:
+          description: Successful response after merging carts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart' 
+        400:
+          description: Bad Request
+        5XX:
+          description: Unexpected error
+  /cart/update-quantity:
+    post:
+      summary: Update quantity of a product in the cart
+      description: Updates the quantity of a specific product in the user's cart based on productId, userId, and size provided.
+      tags: [Cart]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId:
+                  type: string
+                  example: "66508c3b61e9629b1d543d54"
+                  description: Unique identifier for the product
+                quantity:
+                  type: integer
+                  example: 1
+                  description: New quantity of the product in the cart
+                size:
+                  type: string
+                  example: "M"
+                  description: Size of the product
+                userId:
+                  type: string
+                  example: "664ca87e87c2f53b2e48b30a"
+                  description: Unique identifier for the user
+      responses:
+        200:
+          description: Successful response after updating cart quantity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        400:
+          description: Bad Request
+        5XX:
+          description: Unexpected error
+  /cart/promo-apply:
+    post:
+      summary: Apply promo code to user's cart
+      description: Applies a promo code identified by promoCodeId to the user's cart based on userId.
+      tags: [Cart]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                promoCodeId:
+                  type: string
+                  example: "6671312ae60d1abb22bffd64"
+                  description: Unique identifier for the promo code
+                userId:
+                  type: string
+                  example: "664ca87e87c2f53b2e48b30a"
+                  description: Unique identifier for the user
+      responses:
+        200:
+          description: Successful response after applying promo code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        400:
+          description: Bad Request
+        5XX:
+          description: Unexpected error
+  /cart/promo-remove:
+    post:
+      summary: Remove applied promo code from user's cart
+      description: Removes the applied promo code from the user's cart based on userId.
+      tags: [Cart]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  example: "664ca87e87c2f53b2e48b30a"
+                  description: Unique identifier for the user
+      responses:
+        200:
+          description: Successful response after removing promo code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        400:
+          description: Bad Request
+        5XX:
+          description: Unexpected error
 components:
   schemas:
     Country:
@@ -699,7 +1037,7 @@ components:
           example: 4.5
         thumbs:
           type: string
-          description: The thumbnail of the product in Base64 format
+          description: Thumbnail image of the product (base64 encoded)
           example: iVBORw0KGgoAAAANSUhEUgAAAgAAAAEgCAMAAAD14jtjAAADA
         title:
           type: string
@@ -884,4 +1222,107 @@ components:
                 type: string
                 description: Tubes of the bike.
                 example: "Continental"
+    CartItem:
+      type: object
+      properties:
+        productId:
+          type: string
+          example: "66508c3b61e9629b1d543d59"
+          description: Unique identifier for the product
+        title:
+          type: string
+          example: "Reaction ONE"
+          description: Name of the product
+        vendorCode:
+          type: integer
+          example: 670969
+          description: Vendor code of the product
+        price:
+          type: number
+          format: float
+          example: 639.99
+          description: Price of the product
+        thumbs:
+          type: string
+          format: byte
+          example: "iVBORw0KGgoAAAANSUhEUgAA"
+          description: Thumbnail image of the product (base64 encoded)
+        quantity:
+          type: integer
+          example: 1
+          description: Quantity of the product in the cart
+        size:
+          type: string
+          example: "M"
+          description: Size of the product
+    Promo:
+      type: object
+      required:
+        - code
+        - discount
+        - discountType
+      properties:
+        code:
+          type: string
+          example: "SUMMER25"
+          description: The promo code identifier
+        discount:
+          type: number
+          format: float
+          example: 25
+          description: The discount value
+        discountType:
+          type: string
+          example: "percentage"
+          enum:
+            - percentage
+            - fixed_amount
+          description: The type of discount (percentage or fixed amount)
+        _id:
+          type: string
+          example: "666aa81ab461f4e73cfc2a4e"
+          description: Unique identifier for the promo code
+    Cart:
+      type: object
+      properties:
+        promo:
+          oneOf:
+            - $ref: '#/components/schemas/Promo'
+            - type: string
+              nullable: true
+              example: null
+          description: Applied promo code details or null if no promo code applied
+        _id:
+          type: string
+          example: "666aa81ab461f4e73cfc2a4e"
+          description: Unique identifier for the cart
+        userId:
+          type: string
+          example: "664ca87e87c2f53b2e48b30a"
+          description: Unique identifier for the user
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItem'
+          description: List of items in the cart
+        totalItems:
+          type: integer
+          example: 3
+          description: Total number of items in the cart
+        totalPrice:
+          type: number
+          format: float
+          example: 1249.99
+          description: Total price of items in the cart
+        totalDiscount:
+          type: number
+          format: float
+          example: 100
+          description: Total discount applied to the cart
+        totalPromoDiscount:
+          type: number
+          format: float
+          example: 0
+          description: Total promotional discount applied to the cart
+      
             
