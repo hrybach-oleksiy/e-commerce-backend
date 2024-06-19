@@ -7,41 +7,10 @@ const router = require('./router/index');
 const errorMiddleware = require('./middlewares/error-middleware');
 const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
 
 const PORT = process.env.PORT || 3000;
 const { DB_URL } = process.env;
 const app = express();
-
-// const swaggerDefinition = {
-//   openapi: '3.0.0',
-//   info: {
-//     title: 'Express API for e-commerce pet project',
-//     version: '1.0.1',
-//     description: 'This is a REST API application made with Express. It retrieves data from the app server',
-//     license: {
-//       name: 'Licensed Under MIT',
-//       url: 'https://spdx.org/licenses/MIT.html',
-//     },
-//   },
-//   servers: [
-//     {
-//       url: 'http://localhost:3000/api',
-//       description: 'Development server',
-//     },
-//     {
-//       url: 'https://codefrondlers.store/jsfe23q4/api',
-//       description: 'Production server',
-//     },
-//   ],
-// };
-
-// const swaggerOptions = {
-//   swaggerDefinition,
-//   apis: ['./router/*.js', './models/*.js', './schemas/*.js'],
-// };
-
-// const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 const swaggerDocument = YAML.load('./docs/swagger.yaml');
 

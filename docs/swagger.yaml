@@ -351,69 +351,91 @@ paths:
       tags: [Products]
       description: Get products by filters
       requestBody:
-        required: false
+        description: Search query, filters, pagination, and sorting options.
+        required: true
         content:
           application/json:
             schema:
               type: object
               properties:
-                category:
+                query:
                   type: string
-                  description: category of products (bikes or accessories)
-                  example: bikes
-                minPrice:
-                  type: number
-                  description: Minimum price value of range ($)
-                  example: 100
-                maxPrice:
-                  type: number
-                  description: Maximum price value of range ($)
-                  example: 2000
-                weight:
-                  type: number
-                  description: Maximum rider weight (100 - 130 kg (step 15))
-                  example: 115
-                # minBase:
-                #   type: number
-                #   description: Minimum bike wheel base of range (mm)
-                #   example: 1000
-                # maxBase:
-                #   type: number
-                #   description: Maximum bike wheel base of range (mm)
-                #   example: 1100
-                # frameSize:
-                #   type: number
-                #   description: Frame bike size (mm)
-                #   example: 450
+                  example: Race
+                  description: Search query string
+                filters:
+                  type: object
+                  properties:
+                    colors:
+                      type: array
+                      items:
+                        type: string
+                      example: ["Black", "Green"]
+                      description: List of colors to filter by
+                    categories:
+                      type: array
+                      items:
+                        type: string
+                      example: ["Bikes"]
+                      description: List of categories to filter by
+                    rating:
+                      type: number
+                      example: 1
+                      description: Minimum rating to filter by
+                    weight:
+                      type: array
+                      items:
+                        type: number
+                        format: float
+                      example: [120]
+                      description: List of weights to filter by
+                    minPrice:
+                      type: number
+                      format: float
+                      example: 0
+                      description: Minimum price to filter by
+                    maxPrice:
+                      type: number
+                      format: float
+                      example: 2000
+                      description: Maximum price to filter by
+                page:
+                  type: integer
+                  example: 1
+                  description: Page number for pagination
+                pageSize:
+                  type: integer
+                  example: 8
+                  description: Number of items per page
+                sorts:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      field:
+                        type: string
+                        example: Alphabetically, A-Z
+                        description: Field to sort by
+                      order:
+                        type: string
+                        enum: ["ASC", "DESC"]
+                        example: ASC
+                        description: Sorting order (ascending or descending)
       responses:
         200:
           description: Successful retrieval of the list of the products.
           content:
             application/json:
-              schema:
-                type: array
-                items:
-                  properties:
-                    title:
-                      type: string
-                      description: Product title
-                      example: City Step-Through 26" 3-Speed Yellow
-                    price:
-                      type: number
-                      description: Product title
-                      example: 699.99
-                    rating:
-                      type: number
-                      description: Product rating from 0 to 5 (step 0.5)
-                      example: 4.5
-                    vendorCode:
-                      type: number
-                      description: Product code
-                      example: 671296
-                    discountedRouter:
-                      type: number
-                      description: Discounted price ($)
-                      example: 559.99
+               schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    example: 36
+                    description: Total number of products available
+                  products:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductSummary'
         400:
           description: Bad Request.
         5XX:
@@ -434,36 +456,7 @@ paths:
                   products:
                     type: array
                     items: 
-                      type: object
-                      properties:
-                        discountedPrice: 
-                          type: number
-                          description: Discounted price of the product
-                          example: 599.99
-                        price:
-                          type: number
-                          description: The price of the product
-                          example: 1899.99
-                        rating:
-                          type: number
-                          description: The rating  of the product
-                          example: 4.5
-                        thumbs:
-                          type: string
-                          description: The thumbnail of the product in Base64 format
-                          example: iVBORw0KGgoAAAANSUhEUgAAAgAAAAEgCAMAAAD14jtjAAADA
-                        title:
-                          type: string
-                          description: The name of the product
-                          example: Agree Race
-                        vendorCode:
-                          type: number
-                          description: Vendor code of the product
-                          example: 670963
-                        _id: 
-                          type: string
-                          description: Identifier received from the server.
-                          example: 66508c3b61e9629b1d543d6a
+                      $ref: '#/components/schemas/ProductSummary'
                   total:
                     type: number
                     description: Total amount of the items
@@ -689,6 +682,37 @@ components:
               example: "This bike meets all safety standards."
         sizing:
           $ref: '#/components/schemas/Size'
+    ProductSummary:
+      type: object
+      properties:
+        discountedPrice: 
+          type: number
+          description: Discounted price of the product
+          example: 599.99
+        price:
+          type: number
+          description: The price of the product
+          example: 1899.99
+        rating:
+          type: number
+          description: The rating  of the product
+          example: 4.5
+        thumbs:
+          type: string
+          description: The thumbnail of the product in Base64 format
+          example: iVBORw0KGgoAAAANSUhEUgAAAgAAAAEgCAMAAAD14jtjAAADA
+        title:
+          type: string
+          description: The name of the product
+          example: Agree Race
+        vendorCode:
+          type: number
+          description: Vendor code of the product
+          example: 670963
+        _id: 
+          type: string
+          description: Identifier received from the server.
+          example: 66508c3b61e9629b1d543d6a
     Size:
         type: object
         properties:
