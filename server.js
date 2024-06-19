@@ -45,7 +45,6 @@ const app = express();
 // const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 const swaggerDocument = YAML.load('./docs/swagger.yaml');
-console.log(swaggerDocument);
 
 app.use(express.json({ limit: '1mb' }));
 
