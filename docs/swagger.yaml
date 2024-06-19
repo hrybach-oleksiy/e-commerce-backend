@@ -19,7 +19,10 @@ tags:
   - name: Users
     description: Operations related to users
   - name: Cart
-    description: Operations with product's cart  
+    description: Operations with product's cart 
+  - name: Promo Codes
+    description: Operations related to promo codes
+    
 paths:
   /countries:
     get:
@@ -850,6 +853,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Cart'
+        400:
+          description: Bad Request
+        5XX:
+          description: Unexpected error
+  /promo:
+    get:
+      summary: Get list of available promo codes
+      description: Retrieves a list of available promo codes that can be applied to the cart.
+      tags: [Promo Codes]
+      responses:
+        200:
+          description: Successful response with list of promo codes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  promoCodes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Promo'
+                    description: List of available promo codes
         400:
           description: Bad Request
         5XX:
