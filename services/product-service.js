@@ -4,7 +4,6 @@ const ProductModel = require('../models/product-model');
 class ProductService {
   async getProducts(payload) {
     const { query: searchQuery, filters, sorts, page, pageSize } = payload;
-    console.log(filters.rating);
 
     let query = {};
 
@@ -56,6 +55,7 @@ class ProductService {
       vendorCode: 1,
       discountedPrice: 1,
       category: 1,
+      shortDescription: 1,
       thumbs: { $arrayElemAt: ['$thumbs', 0] },
     };
 

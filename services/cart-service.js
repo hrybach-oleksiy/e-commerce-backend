@@ -92,6 +92,7 @@ class CartService {
           'items.quantity': '$items.quantity',
           'items.size': '$items.size',
           'items.category': '$product.category',
+          'items.shortDescription': '$product.shortDescription',
         },
       },
       {
