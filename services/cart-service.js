@@ -91,6 +91,7 @@ class CartService {
           'items.thumbs': { $arrayElemAt: ['$product.thumbs', 0] },
           'items.quantity': '$items.quantity',
           'items.size': '$items.size',
+          'items.category': '$product.category',
         },
       },
       {
