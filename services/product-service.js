@@ -55,6 +55,7 @@ class ProductService {
       rating: 1,
       vendorCode: 1,
       discountedPrice: 1,
+      category: 1,
       thumbs: { $arrayElemAt: ['$thumbs', 0] },
     };
 
@@ -88,6 +89,7 @@ class ProductService {
           rating: 1,
           vendorCode: 1,
           discountedPrice: 1,
+          category: 1,
           thumbs: { $arrayElemAt: ['$thumbs', 0] },
         },
       },
