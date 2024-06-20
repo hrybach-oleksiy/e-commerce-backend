@@ -1,0 +1,30 @@
+post:
+  summary: Merge temporary cart with user's cart
+  description: Merges the items from a temporary cart into the user's cart based on tempCartId and userId provided.
+  tags: [Cart]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            tempCartId:
+              type: string
+              example: "66733dc4cbda3c8399b873ed"
+              description: Temporary cart identifier
+            userId:
+              type: string
+              example: "664ca87e87c2f53b2e48b30a"
+              description: Unique identifier for the user
+  responses:
+    200:
+      description: Successful response after merging carts
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Cart"
+    400:
+      description: Bad Request
+    5XX:
+      description: Unexpected error

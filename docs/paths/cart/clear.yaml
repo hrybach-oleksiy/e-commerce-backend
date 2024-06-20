@@ -1,0 +1,57 @@
+post:
+  summary: Clear the user's cart
+  description: Removes all items from the user's cart based on temporary cart ID and user ID.
+  tags: [Cart]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - tempCartId
+            - userId
+          properties:
+            tempCartId:
+              type: string
+              example: "6671a431894a89bbbc3a77fc"
+              description: Temporary cart identifier
+            userId:
+              type: string
+              example: "664ca87e87c2f53b2e48b30a"
+              description: Unique identifier for the user
+  responses:
+    200:
+      description: Successful response with cleared cart
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              _id:
+                type: string
+                nullable: true
+                example: null
+                description: Unique identifier for the cart
+              userId:
+                type: string
+                example: "664ca87e87c2f53b2e48b30a"
+                description: Unique identifier for the user
+              items:
+                type: array
+                items: {}
+                example: []
+                description: Empty array, as no items are present in the cart
+              totalItems:
+                type: integer
+                example: 0
+                description: Total number of items in the cart after clearing
+              totalPrice:
+                type: number
+                format: float
+                example: 0
+                description: Total price of items in the cart after clearing
+    400:
+      description: Bad Request
+    5XX:
+      description: Unexpected error

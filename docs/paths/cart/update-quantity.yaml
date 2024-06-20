@@ -1,0 +1,38 @@
+post:
+  summary: Update quantity of a product in the cart
+  description: Updates the quantity of a specific product in the user's cart based on productId, userId, and size provided.
+  tags: [Cart]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            productId:
+              type: string
+              example: "66508c3b61e9629b1d543d54"
+              description: Unique identifier for the product
+            quantity:
+              type: integer
+              example: 1
+              description: New quantity of the product in the cart
+            size:
+              type: string
+              example: "M"
+              description: Size of the product
+            userId:
+              type: string
+              example: "664ca87e87c2f53b2e48b30a"
+              description: Unique identifier for the user
+  responses:
+    200:
+      description: Successful response after updating cart quantity
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Cart"
+    400:
+      description: Bad Request
+    5XX:
+      description: Unexpected error
