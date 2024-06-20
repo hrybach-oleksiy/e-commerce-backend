@@ -68,6 +68,8 @@ paths:
     $ref: "./docs/paths/cart/promo-remove.yaml"
   /promo:
     $ref: "./docs/paths/promo/promo.yaml"
+  /promo/{id}:
+    $ref: "./docs/paths/promo/promo-id.yaml"
 components:
   schemas:
     Country:
