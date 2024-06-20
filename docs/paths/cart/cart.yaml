@@ -1,0 +1,86 @@
+post:
+  summary: Add a product to the cart
+  tags: [Cart]
+  description: This endpoint adds a product to the user's cart and returns the updated cart information.
+  requestBody:
+    description: Details of the product to be added to the cart.
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            productId:
+              type: string
+              example: "66508c3b61e9629b1d543d67"
+              description: Unique identifier for the product
+            quantity:
+              type: integer
+              example: 1
+              description: Quantity of the product to add
+            size:
+              type: string
+              example: "M"
+              description: Size of the product
+            tempCartId:
+              type: string
+              example: "6671a431894a89bbbc3a77fc"
+              description: Temporary cart identifier
+            userId:
+              type: string
+              example: "664ca87e87c2f53b2e48b30a"
+              description: Unique identifier for the user
+  responses:
+    200:
+      description: Successful response with updated cart information
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Cart"
+    400:
+      description: Bad Request
+    5XX:
+      description: Unexpected error
+delete:
+  summary: Delete a product from the cart
+  tags: [Cart]
+  description: This endpoint deletes a product from the user's cart and returns the updated cart information.
+  requestBody:
+    description: Details of the product to be added to the cart.
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            productId:
+              type: string
+              example: "66508c3b61e9629b1d543d67"
+              description: Unique identifier for the product
+            quantity:
+              type: integer
+              example: 1
+              description: Quantity of the product to add
+            size:
+              type: string
+              example: "M"
+              description: Size of the product
+            tempCartId:
+              type: string
+              example: "6671a431894a89bbbc3a77fc"
+              description: Temporary cart identifier
+            userId:
+              type: string
+              example: "664ca87e87c2f53b2e48b30a"
+              description: Unique identifier for the user
+  responses:
+    200:
+      description: Successful response with updated cart information
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Cart"
+    400:
+      description: Bad Request
+    5XX:
+      description: Unexpected error

@@ -4,6 +4,7 @@ const ProductModel = require('../models/product-model');
 class ProductService {
   async getProducts(payload) {
     const { query: searchQuery, filters, sorts, page, pageSize } = payload;
+    console.log(filters.rating);
 
     let query = {};
 
@@ -54,6 +55,7 @@ class ProductService {
       rating: 1,
       vendorCode: 1,
       discountedPrice: 1,
+      category: 1,
       thumbs: { $arrayElemAt: ['$thumbs', 0] },
     };
 
@@ -87,6 +89,7 @@ class ProductService {
           rating: 1,
           vendorCode: 1,
           discountedPrice: 1,
+          category: 1,
           thumbs: { $arrayElemAt: ['$thumbs', 0] },
         },
       },
@@ -100,39 +103,6 @@ class ProductService {
     if (!product) throw ApiError.BadRequest(`Product with vendor code ${vendorCode} not found`);
     return product;
   }
-
-  // async getFiltersData() {
-  //   const categoriesPromise = ProductModel.distinct('category');
-  //   const colorsPromise = ProductModel.distinct('color');
-  //   const ratingPromise = ProductModel.distinct('rating');
-  //   const weightPromise = ProductModel.distinct('weight');
-
-  //   const [categories, colors, rating, weight] = await Promise.all([
-  //     categoriesPromise,
-  //     colorsPromise,
-  //     ratingPromise,
-  //     weightPromise,
-  //   ]);
-
-  //   const [minMaxPrice] = await ProductModel.aggregate([
-  //     {
-  //       $group: {
-  //         _id: null,
-  //         minPrice: { $min: '$price' },
-  //         maxPrice: { $max: '$price' },
-  //       },
-  //     },
-  //   ]);
-
-  //   return {
-  //     categories,
-  //     colors,
-  //     weight: weight.filter((w) => w !== undefined),
-  //     minPrice: minMaxPrice.minPrice,
-  //     maxPrice: minMaxPrice.maxPrice,
-  //     rating,
-  //   };
-  // }
 
   async getFiltersData() {
     const categoriesPromise = ProductModel.distinct('category');
@@ -157,36 +127,6 @@ class ProductService {
       },
     ]);
 
-    const [minMaxHeadTube] = await ProductModel.aggregate([
-      {
-        $group: {
-          _id: null,
-          minHeadTube: { $min: '$sizing.headTube.small' },
-          maxHeadTube: { $max: '$sizing.headTube.large' },
-        },
-      },
-    ]);
-
-    const [minMaxWheelBase] = await ProductModel.aggregate([
-      {
-        $group: {
-          _id: null,
-          minWheelBase: { $min: '$sizing.wheelBase.small' },
-          maxWheelBase: { $max: '$sizing.wheelBase.large' },
-        },
-      },
-    ]);
-
-    const [minMaxSeatTube] = await ProductModel.aggregate([
-      {
-        $group: {
-          _id: null,
-          minSeatTube: { $min: '$sizing.seatTube.small' },
-          maxSeatTube: { $max: '$sizing.seatTube.large' },
-        },
-      },
-    ]);
-
     return {
       categories,
       colors,
@@ -194,12 +134,6 @@ class ProductService {
       minPrice: minMaxPrice.minPrice,
       maxPrice: minMaxPrice.maxPrice,
       rating,
-      minHeadTube: minMaxHeadTube.minHeadTube,
-      maxHeadTube: minMaxHeadTube.maxHeadTube,
-      minWheelBase: minMaxWheelBase.minWheelBase,
-      maxWheelBase: minMaxWheelBase.maxWheelBase,
-      minSeatTube: minMaxSeatTube.minSeatTube,
-      maxSeatTube: minMaxSeatTube.maxSeatTube,
     };
   }
 

@@ -1,0 +1,9 @@
+post:
+  summary: Check if email already exists in the system
+  tags: [Users]
+  description: Check if email already exists in the system.
+  responses:
+    200:
+      description: Information about the existence of email in the system.
+    5XX:
+      description: Unexpected error

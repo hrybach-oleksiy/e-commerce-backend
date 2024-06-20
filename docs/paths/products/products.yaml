@@ -1,0 +1,113 @@
+get:
+  summary: Get product
+  tags: [Products]
+  description: Get product by vendor code
+  parameters:
+    - in: query
+      name: vc
+      schema:
+        type: number
+      required: true
+      description: The vendor code of the product
+      example: 671296
+  responses:
+    200:
+      description: Successful retrieval of the product
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Product"
+post:
+  summary: Fetch products
+  tags: [Products]
+  description: Get products by filters
+  requestBody:
+    description: Search query, filters, pagination, and sorting options
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            query:
+              type: string
+              example: Race
+              description: Search query string
+            filters:
+              type: object
+              properties:
+                colors:
+                  type: array
+                  items:
+                    type: string
+                  example: ["Black", "Green"]
+                  description: List of colors to filter by
+                categories:
+                  type: array
+                  items:
+                    type: string
+                  example: ["Bikes"]
+                  description: List of categories to filter by
+                rating:
+                  type: number
+                  example: 1
+                  description: Minimum rating to filter by
+                weight:
+                  type: array
+                  items:
+                    type: number
+                    format: float
+                  example: [120]
+                  description: List of weights to filter by
+                minPrice:
+                  type: number
+                  format: float
+                  example: 0
+                  description: Minimum price to filter by
+                maxPrice:
+                  type: number
+                  format: float
+                  example: 2000
+                  description: Maximum price to filter by
+            page:
+              type: integer
+              example: 1
+              description: Page number for pagination
+            pageSize:
+              type: integer
+              example: 8
+              description: Number of items per page
+            sorts:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                    example: Alphabetically, A-Z
+                    description: Field to sort by
+                  order:
+                    type: string
+                    enum: ["ASC", "DESC"]
+                    example: ASC
+                    description: Sorting order (ascending or descending)
+  responses:
+    200:
+      description: Successful retrieval of the list of the products
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              total:
+                type: integer
+                example: 36
+                description: Total number of products available
+              products:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductSummary"
+    400:
+      description: Bad Request
+    5XX:
+      description: Unexpected error

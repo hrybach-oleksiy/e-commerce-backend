@@ -1,0 +1,30 @@
+post:
+  summary: Load user's or temporary cart
+  description: Retrieves the user's or temporary cart based on either userId or tempCartId provided.
+  tags: [Cart]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            userId:
+              type: string
+              example: "664ca87e87c2f53b2e48b30a"
+              description: Unique identifier for the user
+            tempCartId:
+              type: string
+              example: "6671a431894a89bbbc3a77fc"
+              description: Temporary cart identifier
+  responses:
+    200:
+      description: Successful response with the user's or temporary cart
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Cart"
+    400:
+      description: Bad Request
+    5XX:
+      description: Unexpected error

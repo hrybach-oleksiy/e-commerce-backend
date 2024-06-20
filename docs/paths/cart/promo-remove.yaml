@@ -1,0 +1,26 @@
+post:
+  summary: Remove applied promo code from user's cart
+  description: Removes the applied promo code from the user's cart based on userId.
+  tags: [Cart]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            userId:
+              type: string
+              example: "664ca87e87c2f53b2e48b30a"
+              description: Unique identifier for the user
+  responses:
+    200:
+      description: Successful response after removing promo code
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Cart"
+    400:
+      description: Bad Request
+    5XX:
+      description: Unexpected error

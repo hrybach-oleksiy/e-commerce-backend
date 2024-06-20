@@ -1,0 +1,26 @@
+post:
+  summary: Add address
+  tags: [Users]
+  description: Add address.
+  parameters:
+    - in: path
+      name: userID
+      schema:
+        type: string
+      required: true
+      description: User ID.
+    - in: path
+      name: type
+      schema:
+        type: string
+      required: true
+      description: Address type (eg. shipping, billing).
+  responses:
+    200:
+      description: Added address.
+    401:
+      description: Unauthorized
+    403:
+      description: Forbidden
+    5XX:
+      description: Unexpected error

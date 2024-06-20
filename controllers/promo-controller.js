@@ -10,9 +10,9 @@ class PromoController {
     }
   }
 
-  async cretePromo(req, res, next) {
+  async createPromo(req, res, next) {
     try {
-      const promo = await promoService.cretePromo(req.body);
+      const promo = await promoService.createPromo(req.body);
       return res.json(promo);
     } catch (error) {
       next(error);

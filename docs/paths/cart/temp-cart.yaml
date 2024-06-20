@@ -1,0 +1,31 @@
+post:
+  summary: Create a temporary cart
+  description: Creates a temporary cart on the server.
+  tags: [Cart]
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+  responses:
+    200:
+      description: Successful response with a temporary cart
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              _id:
+                type: string
+                example: "66733dc4cbda3c8399b873ed"
+                description: Unique identifier for the temporary cart
+              items:
+                type: array
+                items: {}
+                example: []
+                description: Empty array, indicating no items in the temporary cart
+    400:
+      description: Bad Request
+    5XX:
+      description: Unexpected error

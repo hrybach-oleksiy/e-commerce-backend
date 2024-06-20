@@ -6,7 +6,7 @@ class PromoService {
     return promos;
   }
 
-  async cretePromo(payload) {
+  async createPromo(payload) {
     let promo = await Promo.findOne({ code: payload.code });
     if (promo) {
       throw new Error(`promo with code=${payload.code} already exists`);

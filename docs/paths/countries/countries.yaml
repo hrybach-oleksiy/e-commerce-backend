@@ -1,0 +1,17 @@
+get:
+  summary: Get the list of all countries.
+  tags: [Countries]
+  description: Get the list of all countries.
+  responses:
+    200:
+      description: Successful retrieval of the list of the countries.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Country'
+      400:
+        description: Bad Request.
+      5XX:
+        description: Unexpected error

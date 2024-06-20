@@ -1,0 +1,68 @@
+get:
+  summary: Filter Categories
+  tags: [Products]
+  description: Get the list of possible filter categories
+  responses:
+    200:
+      description: Successful response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              categories:
+                type: array
+                items:
+                  type: string
+                example: ["accessory", "bikes"]
+                description: List of product categories
+              colors:
+                type: array
+                items:
+                  type: string
+                example:
+                  [
+                    "Aquamarine",
+                    "Black",
+                    "Blue",
+                    "Galactic",
+                    "Green",
+                    "Grey",
+                    "Olive",
+                    "Orange",
+                    "Purple",
+                    "Red",
+                    "Sienna",
+                    "Silver",
+                    "White",
+                    "Yellow",
+                  ]
+                description: List of available product colors
+              weight:
+                type: array
+                items:
+                  type: number
+                  format: float
+                example: [100, 115, 130]
+                description: List of maximum weights of the rider (in kg)
+              minPrice:
+                type: number
+                format: float
+                example: 74.99
+                description: Minimum product price
+              maxPrice:
+                type: number
+                format: float
+                example: 1899.99
+                description: Maximum product price
+              rating:
+                type: array
+                items:
+                  type: number
+                  format: float
+                example: [3, 3.5, 4, 4.5, 5]
+                description: List of possible product ratings
+    400:
+      description: Bad Request
+    5XX:
+      description: Unexpected error

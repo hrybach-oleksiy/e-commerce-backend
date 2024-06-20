@@ -1,0 +1,11 @@
+get:
+  summary: Refresh access token
+  tags: [Users]
+  description: Refresh the access token for the current user.
+  responses:
+    200:
+      description: Access token refreshed successfully.
+    401:
+      description: Unauthorized
+    5XX:
+      description: Unexpected error
