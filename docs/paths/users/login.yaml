@@ -1,0 +1,68 @@
+post:
+  summary: User login
+  tags: [Users]
+  description: Authenticate a user using email and password.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+              description: The email address of the user
+              example: test@test.com
+            password:
+              type: string
+              description: The password of the user.
+              example: Smith@123
+  responses:
+    200:
+      description: User logged in successfully.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              accessToken:
+                type: string
+                description: Access token received from the server
+                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndvdF9rb25vdG9wQHVrci5uZXQiLCJpZCI6IjY2MzYzMzYxYWQ3MzA1MzZhMTg1NWI1MSIsImlzQWN0aXZhdGVkIjpmYWxzZSwiaWF0IjoxNzE0ODI4MTMyLCJleHAiOjE3MTQ4MjgxNDd9.mUtKjXXvm5A3xMCu6sPs5DyWbJXm520UxFIux3uzWE8",
+              refreshToken:
+                type: string
+                description: Refresh token received from the server
+                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndvdF9rb25vdG9wQHVrci5uZXQiLCJpZCI6IjY2MzYzMzYxYWQ3MzA1MzZhMTg1NWI1MSIsImlzQWN0aXZhdGVkIjpmYWxzZSwiaWF0IjoxNzE0ODI4MTMyLCJleHAiOjE3MTc0MjAxMzJ9.9CUrUXyFo6jkEfsXW9nnwJ7vrqNs0CQE79QrZlNr_sk
+              user:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    format: email
+                    description: The email address of the user
+                    example: test@test.com
+                  _id:
+                    type: string
+                    description: Identifier received from the server
+                    example: 663a132951c79c45833675fa
+                  isActivated:
+                    type: boolean
+                    description: current activation status of the user
+                    example: false
+    400:
+      description: Bad Request. Wrong password or email
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message
+                example: The user with such email was not found OR Invalid Password
+              errors:
+                type: array
+                items:
+                  type: string
+    5XX:
+      description: Unexpected error

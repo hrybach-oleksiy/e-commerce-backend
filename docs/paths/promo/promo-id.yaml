@@ -1,0 +1,16 @@
+delete:
+  summary: Delete a promo code by ID
+  description: Deletes a promo code by its unique ID.
+  tags: [Promo Codes]
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        example: "6671312ae60d1abb22bffd64"
+  responses:
+    "204":
+      description: Promo code deleted successfully
+    "404":
+      description: Promo code not found

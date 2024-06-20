@@ -1,0 +1,27 @@
+Promo:
+  type: object
+  required:
+    - code
+    - discount
+    - discountType
+  properties:
+    code:
+      type: string
+      example: "SUMMER25"
+      description: The promo code identifier
+    discount:
+      type: number
+      format: float
+      example: 25
+      description: The discount value
+    discountType:
+      type: string
+      example: "percentage"
+      enum:
+        - percentage
+        - fixed_amount
+      description: The type of discount (percentage or fixed amount)
+    _id:
+      type: string
+      example: "666aa81ab461f4e73cfc2a4e"
+      description: Unique identifier for the promo code

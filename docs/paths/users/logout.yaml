@@ -1,0 +1,22 @@
+post:
+  summary: User logout
+  tags: [Users]
+  description: Log out the current user from the system.
+  responses:
+    200:
+      description: User logged out successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              acknowledged:
+                type: boolean
+                description: A boolean value indicating whether the operation was successfully acknowledged by the server.
+                example: true
+              deletedCount:
+                type: number
+                description: The number of documents deleted from the database as a result of the operation (typically 0 or 1).
+                example: 1
+    5XX:
+      description: Unexpected error

@@ -1,0 +1,31 @@
+ProductSummary:
+  type: object
+  properties:
+    discountedPrice:
+      type: number
+      description: Discounted price of the product
+      example: 599.99
+    price:
+      type: number
+      description: The price of the product
+      example: 1899.99
+    rating:
+      type: number
+      description: The rating  of the product
+      example: 4.5
+    thumbs:
+      type: string
+      description: Thumbnail image of the product (base64 encoded)
+      example: iVBORw0KGgoAAAANSUhEUgAAAgAAAAEgCAMAAAD14jtjAAADA
+    title:
+      type: string
+      description: The name of the product
+      example: Agree Race
+    vendorCode:
+      type: number
+      description: Vendor code of the product
+      example: 670963
+    _id:
+      type: string
+      description: Identifier received from the server.
+      example: 66508c3b61e9629b1d543d6a

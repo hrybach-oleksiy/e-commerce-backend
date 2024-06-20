@@ -1,67 +1,77 @@
 require('dotenv').config();
+const http = require('http');
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const router = require('./router/index');
 const errorMiddleware = require('./middlewares/error-middleware');
+const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
+const resolveRefs = require('json-refs').resolveRefs;
 
 const PORT = process.env.PORT || 3000;
 const { DB_URL } = process.env;
-const app = express();
 
-const swaggerDefinition = {
-  openapi: '3.0.0',
-  info: {
-    title: 'Express API for e-commerce pet project',
-    version: '1.0.1',
-    description: 'This is a REST API application made with Express. It retrieves data from the app server',
-    license: {
-      name: 'Licensed Under MIT',
-      url: 'https://spdx.org/licenses/MIT.html',
+/**
+ * Return JSON with resolved references
+ * @param {array | object} root - The structure to find JSON References within (Swagger spec)
+ * @returns {Promise.<JSON>}
+ */
+const multiFileSwagger = (root) => {
+  const options = {
+    filter: ['relative', 'remote'],
+    loaderOptions: {
+      processContent: function (res, callback) {
+        callback(null, YAML.parse(res.text));
+      },
     },
-  },
-  servers: [
-    {
-      url: 'http://localhost:3000/api',
-      description: 'Development server',
+  };
+
+  return resolveRefs(root, options).then(
+    function (results) {
+      return results.resolved;
     },
-    {
-      url: 'https://codefrondlers.store/jsfe23q4/api',
-      description: 'Production server',
+    function (err) {
+      console.log(err.stack);
     },
-  ],
+  );
 };
 
-const swaggerOptions = {
-  swaggerDefinition,
-  apis: ['./router/*.js', './models/*.js', './schemas/*.js'],
+const createServer = async () => {
+  const app = express();
+
+  const swaggerDocument = await multiFileSwagger(YAML.load(path.resolve(__dirname, './docs/swagger.yaml')));
+
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+  app.use(
+    cors({
+      origin: ['https://hrybach-oleksiy.github.io', 'http://localhost:5173', 'https://playoffthecuff.github.io'],
+      credentials: true,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      optionsSuccessStatus: 204,
+    }),
+  );
+
+  app.use(express.json({ limit: '1mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+  app.use(cookieParser());
+
+  app.use('/api', router);
+
+  app.use((req, res, next) => {
+    res.setHeader('Permissions-Policy', 'interest-cohort=()');
+    next();
+  });
+
+  app.use(errorMiddleware);
+
+  const server = http.createServer(app);
+
+  return server;
 };
-
-const swaggerSpec = swaggerJsdoc(swaggerOptions);
-
-app.use(express.json({ limit: '1mb' }));
-
-app.use(express.urlencoded({ extended: true, limit: '1mb' }));
-
-app.use(cookieParser());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use(
-  cors({
-    origin: ['https://hrybach-oleksiy.github.io', 'http://localhost:5173', 'https://playoffthecuff.github.io'],
-    credentials: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    optionsSuccessStatus: 204,
-  }),
-);
-app.use('/api', router);
-app.use((req, res, next) => {
-  res.setHeader('Permissions-Policy', 'interest-cohort=()');
-  next();
-});
-app.use(errorMiddleware);
 
 const start = async () => {
   try {
@@ -70,7 +80,10 @@ const start = async () => {
     }
 
     await mongoose.connect(DB_URL);
-    app.listen(PORT, () => {
+
+    const server = await createServer();
+
+    server.listen(PORT, () => {
       console.log(`Server starts on port ${PORT}`, `with the collection ${mongoose.connection.name}`);
     });
   } catch (error) {

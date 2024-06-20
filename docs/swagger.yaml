@@ -1,0 +1,94 @@
+openapi: 3.0.0
+info:
+  title: "Express API for e-commerce pet project"
+  version: "1.0.1"
+  description: "This is a REST API application made with Express. It retrieves data from the app server"
+  license:
+    name: "Licensed Under MIT"
+    url: "https://spdx.org/licenses/MIT.html"
+servers:
+  - url: "http://localhost:3000/api"
+    description: "Development server"
+  - url: "https://codefrondlers.store/jsfe23q4/api"
+    description: "Production server"
+tags:
+  - name: Products
+    description: Operations related to products
+  - name: Countries
+    description: Operations related to countries
+  - name: Users
+    description: Operations related to users
+  - name: Cart
+    description: Operations with product's cart
+  - name: Promo Codes
+    description: Operations related to promo codes
+
+paths:
+  /countries:
+    $ref: "./docs/paths/countries/countries.yaml"
+  /users/registration:
+    $ref: "./docs/paths/users/registration.yaml"
+  /users/activation/{link}:
+    $ref: "./docs/paths/users/activation.yaml"
+  /users/login:
+    $ref: "./docs/paths/users/login.yaml"
+  /users/logout:
+    $ref: "./docs/paths/users/logout.yaml"
+  /users/refresh:
+    $ref: "./docs/paths/users/refresh.yaml"
+  /users/check-email:
+    $ref: "./docs/paths/users/check-email.yaml"
+  /users/{userID}:
+    $ref: "./docs/paths/users/users-id.yaml"
+  /users/{userID}/addresses/{type}:
+    $ref: "./docs/paths/users/users-id-addresses-type.yaml"
+  /users/{userID}/addresses/{type}/{id}:
+    $ref: "./docs/paths/users/users-id-addresses-type-id.yaml"
+  /products:
+    $ref: "./docs/paths/products/products.yaml"
+  /products/best-selling:
+    $ref: "./docs/paths/products/best-selling.yaml"
+  /products/filters:
+    $ref: "./docs/paths/products/filters.yaml"
+  /cart:
+    $ref: "./docs/paths/cart/cart.yaml"
+  /cart/clear:
+    $ref: "./docs/paths/cart/clear.yaml"
+  /cart/temp-cart:
+    $ref: "./docs/paths/cart/temp-cart.yaml"
+  /cart/load-cart:
+    $ref: "./docs/paths/cart/load-cart.yaml"
+  /cart/merge-cart:
+    $ref: "./docs/paths/cart/merge-cart.yaml"
+  /cart/update-quantity:
+    $ref: "./docs/paths/cart/update-quantity.yaml"
+  /cart/promo-apply:
+    $ref: "./docs/paths/cart/promo-apply.yaml"
+  /cart/promo-remove:
+    $ref: "./docs/paths/cart/promo-remove.yaml"
+  /promo:
+    $ref: "./docs/paths/promo/promo.yaml"
+  /promo/{id}:
+    $ref: "./docs/paths/promo/promo-id.yaml"
+components:
+  schemas:
+    Country:
+      $ref: "./docs/components/country.yaml#/Country"
+    User:
+      $ref: "./docs/components/user.yaml#/User"
+    Address:
+      $ref: "./docs/components/address.yaml#/Address"
+    Product:
+      $ref: "./docs/components/product.yaml#/Product"
+    ProductSummary:
+      $ref: "./docs/components/product-summary.yaml#/ProductSummary"
+    Size:
+      $ref: "./docs/components/size.yaml#/Size"
+    Specs:
+      $ref: "./docs/components/specs.yaml#/Specs"
+    CartItem:
+      $ref: "./docs/components/cart-item.yaml#/CartItem"
+    Promo:
+      $ref: "./docs/components/promo.yaml#/Promo"
+    Cart:
+      $ref: "./docs/components/cart.yaml#/Cart"

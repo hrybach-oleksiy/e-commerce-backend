@@ -1,0 +1,42 @@
+Cart:
+  type: object
+  properties:
+    promo:
+      oneOf:
+        - $ref: "#/components/schemas/Promo"
+        - type: string
+          nullable: true
+          example: null
+      description: Applied promo code details or null if no promo code applied
+    _id:
+      type: string
+      example: "666aa81ab461f4e73cfc2a4e"
+      description: Unique identifier for the cart
+    userId:
+      type: string
+      example: "664ca87e87c2f53b2e48b30a"
+      description: Unique identifier for the user
+    items:
+      type: array
+      items:
+        $ref: "#/components/schemas/CartItem"
+      description: List of items in the cart
+    totalItems:
+      type: integer
+      example: 3
+      description: Total number of items in the cart
+    totalPrice:
+      type: number
+      format: float
+      example: 1249.99
+      description: Total price of items in the cart
+    totalDiscount:
+      type: number
+      format: float
+      example: 100
+      description: Total discount applied to the cart
+    totalPromoDiscount:
+      type: number
+      format: float
+      example: 0
+      description: Total promotional discount applied to the cart

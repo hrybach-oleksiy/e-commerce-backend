@@ -1,0 +1,46 @@
+post:
+  summary: User registration
+  tags: [Users]
+  description: Register a new user
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/User"
+  responses:
+    201:
+      description: User successfully registered
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              accessToken:
+                type: string
+                description: Access token received from the server
+                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndvdF9rb25vdG9wQHVrci5uZXQiLCJpZCI6IjY2MzYzMzYxYWQ3MzA1MzZhMTg1NWI1MSIsImlzQWN0aXZhdGVkIjpmYWxzZSwiaWF0IjoxNzE0ODI4MTMyLCJleHAiOjE3MTQ4MjgxNDd9.mUtKjXXvm5A3xMCu6sPs5DyWbJXm520UxFIux3uzWE8",
+              refreshToken:
+                type: string
+                description: Refresh token received from the server
+                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndvdF9rb25vdG9wQHVrci5uZXQiLCJpZCI6IjY2MzYzMzYxYWQ3MzA1MzZhMTg1NWI1MSIsImlzQWN0aXZhdGVkIjpmYWxzZSwiaWF0IjoxNzE0ODI4MTMyLCJleHAiOjE3MTc0MjAxMzJ9.9CUrUXyFo6jkEfsXW9nnwJ7vrqNs0CQE79QrZlNr_sk
+              user:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    format: email
+                    description: The email address of the user
+                    example: test@test.com
+                  _id:
+                    type: string
+                    description: Identifier received from the server
+                    example: 663a132951c79c45833675fa
+                  isActivated:
+                    type: boolean
+                    description: current activation status of the user
+                    example: false
+    400:
+      description: Bad Request. User is already exist
+    5XX:
+      description: Unexpected error

@@ -1,0 +1,18 @@
+get:
+  summary: User activation
+  tags: [Users]
+  description: Activate a user account using the provided activation link.
+  parameters:
+    - in: path
+      name: link
+      schema:
+        type: string
+      required: true
+      description: The activation link for the user.
+  responses:
+    200:
+      description: User account activated successfully. As a response server redirect the user to the client page and set isActivated field as true
+    400:
+      description: Bad Request. Wrong activation link
+    5XX:
+      description: Unexpected error

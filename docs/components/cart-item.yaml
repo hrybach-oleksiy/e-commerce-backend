@@ -1,0 +1,33 @@
+CartItem:
+  type: object
+  properties:
+    productId:
+      type: string
+      example: "66508c3b61e9629b1d543d59"
+      description: Unique identifier for the product
+    title:
+      type: string
+      example: "Reaction ONE"
+      description: Name of the product
+    vendorCode:
+      type: integer
+      example: 670969
+      description: Vendor code of the product
+    price:
+      type: number
+      format: float
+      example: 639.99
+      description: Price of the product
+    thumbs:
+      type: string
+      format: byte
+      example: "iVBORw0KGgoAAAANSUhEUgAA"
+      description: Thumbnail image of the product (base64 encoded)
+    quantity:
+      type: integer
+      example: 1
+      description: Quantity of the product in the cart
+    size:
+      type: string
+      example: "M"
+      description: Size of the product
