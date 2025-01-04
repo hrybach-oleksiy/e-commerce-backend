@@ -10,11 +10,11 @@ class CartService {
 
   async addToCart(payload) {
     const { userId, productId, quantity, size, tempCartId } = payload;
-    const cart = await this.getCart({ userId, tempCartId });
+    let cart = await this.getCart({ userId, tempCartId });
+
     if (!cart) {
       cart = new CartModel({ userId, items: [] });
     }
-
     const itemIndex = cart.items.findIndex((item) => item.productId === productId && item.size === size);
 
     if (itemIndex > -1) {
